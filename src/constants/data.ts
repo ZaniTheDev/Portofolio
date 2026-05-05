@@ -101,19 +101,19 @@ export const JOURNEY: JourneyEntry[] = [
   {
     year: "2022",
     title: "Network Exploration",
-    desc: "mulai mengeksplorasi dunia jaringan, terutama dengan MikroTik dan Cisco. Memahami infrastruktur di balik aplikasi, dan bagaimana mengonfigurasi perangkat untuk mendukung solusi yang saya bangun.",
+    desc: "Mulai mengeksplorasi dunia jaringan, terutama dengan MikroTik dan Cisco. Memahami infrastruktur di balik aplikasi, dan bagaimana mengonfigurasi perangkat untuk mendukung solusi yang saya bangun.",
     accent: "#7c3aed",
   },
   {
-    year: "2023",
+    year: "2024",
     title: "Full-Stack Projects",
-    desc: "Started building complete solutions — from database to UI. Blending backend logic with clean interfaces.",
+    desc: "Membangun proyek full-stack yang menggabungkan keahlian pemrograman dan jaringan. Menerapkan solusi yang tidak hanya berfungsi dengan baik, tetapi juga dioptimalkan untuk performa dan skalabilitas.",
     accent: "#f59e0b",
   },
   {
-    year: "2024 - Present",
+    year: "2025 - Present",
     title: "Continuous Exploration",
-    desc: "Combining networking expertise with software skills. Building tools that bridge both worlds.",
+    desc: "Terus belajar dan bereksperimen dengan teknologi baru, memperdalam keahlian yang sudah ada, dan selalu mencari cara untuk menerapkan pengetahuan saya dalam proyek nyata yang berdampak.",
     accent: "#00ff9d",
   },
 ];

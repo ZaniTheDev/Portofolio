@@ -1,12 +1,15 @@
-import { useEffect, useRef, useState, RefObject } from "react";
+import { useEffect, useRef, useState } from "react";
+import type { RefObject } from "react";
 
 /**
  * Fires once when the observed element enters the viewport.
  * @param threshold  - IntersectionObserver threshold (0–1). Default 0.15.
  * @returns [ref, isVisible] — attach `ref` to the element you want to watch.
  */
-export function useInView(threshold = 0.15): [RefObject<HTMLDivElement>, boolean] {
-  const ref = useRef<HTMLDivElement>(null);
+export function useInView(
+  threshold = 0.15
+): [RefObject<HTMLDivElement | null>, boolean] {
+  const ref = useRef<HTMLDivElement | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
 
   useEffect(() => {

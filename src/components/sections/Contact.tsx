@@ -12,7 +12,7 @@ const Contact: FC = () => (
     <SectionLabel label="05 / Contact" />
 
     <h2 style={{ ...sectionTitleStyle, textAlign: "center" }}>
-      Let's Build Something
+      Let's Build Something Together
     </h2>
 
     <p
@@ -75,7 +75,7 @@ const Contact: FC = () => (
         fontFamily: "'Space Mono', monospace",
       }}
     >
-      © 2024 Hamzah · dibuat dengan React + TypeScript
+      © 2026 Hamzah · dibuat dengan React + TypeScript
     </p>
   </section>
 );
