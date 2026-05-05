@@ -1,4 +1,4 @@
-import { CSSProperties, FC } from "react";
+import type { CSSProperties, FC } from "react";
 import { SKILLS } from "../../constants/data";
 import { sectionTitleStyle } from "../../styles/globalStyles";
 import SectionLabel from "../ui/SectionLabel";
@@ -12,7 +12,7 @@ import SkillBar from "../ui/SkillBar";
 const Skills: FC = () => (
   <section id="skills" style={{ padding: "100px 8%", background: "#0d0d14" }}>
     <SectionLabel label="02 / Skills" />
-    <h2 style={sectionTitleStyle}>Technical Arsenal</h2>
+    <h2 style={sectionTitleStyle}>Technical Skills</h2>
 
     <div
       style={{
@@ -39,7 +39,9 @@ const Skills: FC = () => (
         >
           {/* Category header */}
           <div style={{ marginBottom: "24px" }}>
-            <span style={{ fontSize: "24px", marginRight: 10 }}>{cat.icon}</span>
+            <span style={{ fontSize: "24px", marginRight: 10 }}>
+              {cat.icon}
+            </span>
             <span
               style={{
                 fontFamily: "'Space Mono', monospace",

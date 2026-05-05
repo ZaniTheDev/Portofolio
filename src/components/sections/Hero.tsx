@@ -122,8 +122,8 @@ const Hero: FC<HeroProps> = ({ typedText, onScrollTo }) => (
           marginBottom: "40px",
         }}
       >
-        Crafting robust backends, intuitive frontends, and resilient network
-        infrastructures. I turn ideas into scalable, real-world solutions.
+        Saya adalah seorang peljari teknologi yang bersemangat, dengan minat
+        mendalam dalam pengembangan
       </p>
 
       {/* CTA buttons */}
@@ -153,7 +153,7 @@ const Hero: FC<HeroProps> = ({ typedText, onScrollTo }) => (
             (e.currentTarget.style.boxShadow = "0 0 24px #00ff9d44")
           }
         >
-          View Projects →
+          lihat Proyek →
         </button>
 
         <button
@@ -179,7 +179,7 @@ const Hero: FC<HeroProps> = ({ typedText, onScrollTo }) => (
             e.currentTarget.style.color = "#cdd6f4";
           }}
         >
-          Get in Touch
+          hubungi saya
         </button>
       </div>
 

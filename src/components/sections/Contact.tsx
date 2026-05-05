@@ -23,8 +23,8 @@ const Contact: FC = () => (
         lineHeight: 1.8,
       }}
     >
-      I'm always open to interesting projects, collaborations, and conversations
-      about tech.
+      Saya selalu terbuka untuk peluang baru dan kolaborasi menarik. Jangan ragu
+      untuk menghubungi saya! 😎
     </p>
 
     {/* Contact link buttons */}
@@ -75,7 +75,7 @@ const Contact: FC = () => (
         fontFamily: "'Space Mono', monospace",
       }}
     >
-      © 2024 Hamzah · Built with React + TypeScript
+      © 2024 Hamzah · dibuat dengan React + TypeScript
     </p>
   </section>
 );

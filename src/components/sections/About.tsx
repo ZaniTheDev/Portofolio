@@ -13,7 +13,7 @@ const About: FC = () => {
 
   return (
     <section id="about" style={{ padding: "100px 8%" }}>
-      <SectionLabel label="01 / About" />
+      <SectionLabel label="01 / tentang" />
 
       <div
         ref={ref}
@@ -30,7 +30,9 @@ const About: FC = () => {
       >
         {/* ── Bio ── */}
         <div>
-          <h2 style={{ ...sectionTitleStyle, marginBottom: 24 }}>About Me</h2>
+          <h2 style={{ ...sectionTitleStyle, marginBottom: 24 }}>
+            Tentang Saya
+          </h2>
 
           <p style={{ color: "#a6adc8", lineHeight: 1.9, marginBottom: 20 }}>
             Saya adalah seorang developer yang senang bereksperimen dan
