@@ -36,7 +36,7 @@ const About: FC = () => {
 
           <p style={{ color: "#a6adc8", lineHeight: 1.9, marginBottom: 20 }}>
             Saya adalah seorang developer yang senang bereksperimen dan
-            menjelajahi berbagai aspek teknologi — dari membangun aplikasi web
+            menjelajahi berbagai aspek teknologi dari membangun aplikasi web
             yang efisien hingga mengonfigurasi infrastruktur jaringan yang
             andal.
           </p>
@@ -44,15 +44,14 @@ const About: FC = () => {
           <p style={{ color: "#a6adc8", lineHeight: 1.9, marginBottom: 20 }}>
             Dengan dasar yang kuat di{" "}
             <span style={{ color: "#00ff9d" }}>Python</span> dan{" "}
-            <span style={{ color: "#f7df1e" }}>JavaScript</span>, saya menikmati
+            <span style={{ color: "#f7df1e" }}>JavaScript</span>, saya senang
             membangun solusi full-stack yang menghubungkan logika backend yang
             solid dengan antarmuka frontend yang intuitif.
           </p>
 
           <p style={{ color: "#a6adc8", lineHeight: 1.9 }}>
-            Di luar kode, dunia networking adalah bidang eksplorasi saya —
-            memahami infrastruktur di balik setiap aplikasi melalui konfigurasi
-            perangkat <span style={{ color: "#7c3aed" }}>MikroTik</span> dan{" "}
+            Di luar kode, saya rutin mempelajari dan membangun proyek Networking menggunakan device 
+            <span style={{ color: "#7c3aed" }}> MikroTik</span> dan {" "}
             <span style={{ color: "#00c8ff" }}>Cisco</span>.
           </p>
         </div>
