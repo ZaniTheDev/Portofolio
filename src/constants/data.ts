@@ -31,8 +31,8 @@ export const SKILLS: SkillCategory[] = [
     icon: "⌨️",
     accent: "#00ff9d",
     items: [
-      { name: "Python", icon: "🐍", level: 90 },
-      { name: "JavaScript", icon: "⚡", level: 85 },
+      { name: "Python", icon: "🐍", level: 65 },
+      { name: "JavaScript", icon: "⚡", level: 75 },
     ],
   },
   {
@@ -40,10 +40,10 @@ export const SKILLS: SkillCategory[] = [
     icon: "🌐",
     accent: "#00c8ff",
     items: [
-      { name: "Backend Dev", icon: "🔧", level: 85 },
-      { name: "Frontend Dev", icon: "🎨", level: 80 },
-      { name: "REST APIs", icon: "🔗", level: 82 },
-      { name: "Databases", icon: "🗄️", level: 78 },
+      { name: "Backend Dev", icon: "🔧", level: 55 },
+      { name: "Frontend Dev", icon: "🎨", level: 90 },
+      { name: "REST APIs", icon: "🔗", level: 60 },
+      { name: "Databases", icon: "🗄️", level: 70 },
     ],
   },
   {
