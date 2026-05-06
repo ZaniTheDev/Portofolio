@@ -119,7 +119,7 @@ export const JOURNEY: JourneyEntry[] = [
 ];
 
 export const CONTACT_LINKS: ContactLink[] = [
-  { label: "📧 Email", href: "hamzahtizani@gmail.com", accent: "#00ff9d" },
+  { label: "📧 Email", href: "mailto:hamzahtizani@gmail.com", accent: "#00ff9d" },
   { label: "💼 LinkedIn", href: "#", accent: "#00c8ff" },
   {
     label: "🐙 GitHub",
