@@ -122,8 +122,8 @@ const Hero: FC<HeroProps> = ({ typedText, onScrollTo }) => (
           marginBottom: "40px",
         }}
       >
-        Saya adalah seorang peljari teknologi yang bersemangat, dengan minat
-        mendalam dalam pengembangan
+        Saya adalah seorang pelajar yang bersemangat, dengan minat mendalam
+        dalam pengembangan
       </p>
 
       {/* CTA buttons */}
