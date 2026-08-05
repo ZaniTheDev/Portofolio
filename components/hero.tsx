@@ -132,11 +132,12 @@ export default function Hero() {
         }}
       />
 
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-14 px-6 pb-20 pt-28 sm:px-10 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
+      {/* Adjusted mobile padding and gaps (px-5, pt-24, pb-16, gap-10) while keeping sm/lg desktop variants */}
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 pb-16 pt-24 sm:gap-14 sm:px-10 sm:pb-20 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
         {/* LEFT: headline column */}
         <div className="lg:col-span-7">
           <p
-            className="hero-eyebrow mb-7 inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.14em] sm:text-xs"
+            className="hero-eyebrow mb-5 inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-[11px] font-medium uppercase tracking-[0.14em] sm:mb-7 sm:text-xs"
             style={{ color: TOKENS.trust }}
           >
             <span
@@ -148,15 +149,13 @@ export default function Hero() {
           </p>
 
           <h1
-            className="font-[family-name:var(--font-display)] text-[13vw] font-extrabold leading-[0.98] tracking-[-0.02em] sm:text-6xl md:text-7xl"
+            className="font-[family-name:var(--font-display)] text-[12vw] font-extrabold leading-[1.02] tracking-[-0.02em] sm:text-6xl sm:leading-[0.98] md:text-7xl"
             style={{ color: TOKENS.ink }}
           >
             {headlineLines.map((line, i) => (
               <span key={i} className="block overflow-hidden">
                 <span
-                  className={`hero-line-inner block ${
-                    i === headlineLines.length - 1 ? "" : ""
-                  }`}
+                  className="hero-line-inner block"
                   style={i === 1 ? { color: TOKENS.accent } : undefined}
                 >
                   {line}
@@ -166,7 +165,7 @@ export default function Hero() {
           </h1>
 
           <p
-            className="hero-sub mt-7 max-w-xl text-base leading-relaxed sm:text-lg"
+            className="hero-sub mt-5 max-w-xl text-[15px] leading-relaxed sm:mt-7 sm:text-lg"
             style={{ color: "#3B3F42" }}
           >
             I design and build websites that make service businesses look
@@ -174,10 +173,11 @@ export default function Hero() {
             automate the busywork eating into your week.
           </p>
 
-          <div className="hero-cta mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+          {/* Adjusted to items-stretch on mobile for full-width tap targets */}
+          <div className="hero-cta mt-8 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center sm:gap-4">
             <Link
               href="#contact"
-              className="group inline-flex items-center justify-center gap-2 px-7 py-4 text-sm font-semibold tracking-tight transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="group flex w-full items-center justify-center gap-2 px-6 py-3.5 text-[13px] font-semibold tracking-tight transition-transform duration-200 hover:-translate-y-0.5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto sm:px-7 sm:py-4 sm:text-sm"
               style={{
                 backgroundColor: TOKENS.ink,
                 color: TOKENS.paper,
@@ -195,7 +195,7 @@ export default function Hero() {
 
             <Link
               href="#case-studies"
-              className="inline-flex items-center justify-center gap-2 px-2 py-4 text-sm font-semibold tracking-tight underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+              className="flex w-full items-center justify-center gap-2 px-6 py-3.5 text-[13px] font-semibold tracking-tight underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto sm:px-2 sm:py-4 sm:text-sm"
               style={{
                 color: TOKENS.ink,
                 textDecorationColor: TOKENS.accent,
@@ -207,13 +207,13 @@ export default function Hero() {
           </div>
 
           <ul
-            className="hero-tags mt-12 flex flex-wrap gap-2"
+            className="hero-tags mt-10 flex flex-wrap gap-1.5 sm:mt-12 sm:gap-2"
             aria-label="Industries served"
           >
             {industries.map((industry) => (
               <li
                 key={industry}
-                className="rounded-full border px-3.5 py-1.5 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-wide"
+                className="rounded-full border px-3 py-1 font-[family-name:var(--font-mono)] text-[10px] uppercase tracking-wide sm:px-3.5 sm:py-1.5 sm:text-[11px]"
                 style={{ borderColor: TOKENS.hairline, color: "#54524B" }}
               >
                 {industry}
@@ -231,10 +231,10 @@ export default function Hero() {
               backgroundColor: TOKENS.paperDeep,
             }}
           >
-            {/* ticket punch holes */}
+            {/* ticket punch holes - positioned slightly differently for mobile */}
             <div
               aria-hidden
-              className="absolute -top-2 left-6 h-4 w-4 rounded-full sm:left-8"
+              className="absolute -top-2 left-5 h-4 w-4 rounded-full sm:left-8"
               style={{
                 backgroundColor: TOKENS.paper,
                 border: `1px solid ${TOKENS.hairline}`,
@@ -242,7 +242,7 @@ export default function Hero() {
             />
             <div
               aria-hidden
-              className="absolute -top-2 right-6 h-4 w-4 rounded-full sm:right-8"
+              className="absolute -top-2 right-5 h-4 w-4 rounded-full sm:right-8"
               style={{
                 backgroundColor: TOKENS.paper,
                 border: `1px solid ${TOKENS.hairline}`,
@@ -250,7 +250,7 @@ export default function Hero() {
             />
 
             <div
-              className="flex items-center justify-between border-b px-6 py-4 sm:px-8"
+              className="flex items-center justify-between border-b px-5 py-3.5 sm:px-8 sm:py-4"
               style={{ borderColor: TOKENS.ink }}
             >
               <span
@@ -275,17 +275,17 @@ export default function Hero() {
               ].map((row) => (
                 <div
                   key={row.label}
-                  className="grid grid-cols-[6.5rem_1fr] gap-4 px-6 py-4 sm:px-8"
+                  className="grid grid-cols-[5.5rem_1fr] gap-4 px-5 py-3.5 sm:grid-cols-[6.5rem_1fr] sm:px-8 sm:py-4"
                   style={{ borderColor: TOKENS.hairline }}
                 >
                   <dt
-                    className="text-[11px] uppercase tracking-wide"
+                    className="text-[10px] uppercase tracking-wide sm:text-[11px]"
                     style={{ color: "#6B6A62" }}
                   >
                     {row.label}
                   </dt>
                   <dd
-                    className="text-[13px] leading-snug"
+                    className="text-[12px] leading-snug sm:text-[13px]"
                     style={{ color: TOKENS.ink }}
                   >
                     {row.value}
@@ -293,15 +293,15 @@ export default function Hero() {
                 </div>
               ))}
 
-              <div className="grid grid-cols-[6.5rem_1fr] items-center gap-4 px-6 py-4 sm:px-8">
+              <div className="grid grid-cols-[5.5rem_1fr] items-center gap-4 px-5 py-3.5 sm:grid-cols-[6.5rem_1fr] sm:px-8 sm:py-4">
                 <dt
-                  className="text-[11px] uppercase tracking-wide"
+                  className="text-[10px] uppercase tracking-wide sm:text-[11px]"
                   style={{ color: "#6B6A62" }}
                 >
                   Status
                 </dt>
                 <dd
-                  className="flex items-center gap-2 text-[13px] leading-snug"
+                  className="flex items-center gap-2 text-[12px] leading-snug sm:text-[13px]"
                   style={{ color: TOKENS.ink }}
                 >
                   <span
@@ -315,12 +315,12 @@ export default function Hero() {
             </dl>
 
             <div
-              className="border-t px-6 py-5 sm:px-8"
+              className="border-t px-5 py-4 sm:px-8 sm:py-5"
               style={{ borderColor: TOKENS.ink }}
             >
               <Link
                 href="#contact"
-                className="flex w-full items-center justify-center gap-2 py-3.5 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
+                className="flex w-full items-center justify-center gap-2 py-3 text-xs font-semibold uppercase tracking-wide transition-opacity hover:opacity-90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:py-3.5"
                 style={{
                   backgroundColor: TOKENS.ink,
                   color: TOKENS.paper,
