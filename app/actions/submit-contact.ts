@@ -37,13 +37,29 @@ export async function submitContactAction(
       {
         from: fromFormatted,
         to: email,
-        subject: "Project Inquiry Received - Zani. Studio",
+        replyTo: "hamzahtizani@gmail.com", // Routes client replies directly to your Gmail
+        subject: "Inquiry Received: Let's build your machine.",
         html: `
-          <p>Hi ${name},</p>
-          <p>Thanks for reaching out. We've received your project details and will review them shortly.</p>
-          <p>If you have any immediate questions, feel free to reply directly to this email.</p>
-          <p>Best,<br/>Zani</p>
-        `,
+            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #14171A; max-width: 600px; line-height: 1.6; padding: 20px 0;">
+              <h2 style="font-size: 24px; font-weight: 800; margin-bottom: 24px; letter-spacing: -0.5px;">Transmission Received.</h2>
+              
+              <p style="font-size: 16px; margin-bottom: 16px;">Hi ${name},</p>
+              
+              <p style="font-size: 16px; margin-bottom: 16px;">Your project details just landed on my desk. Thanks for reaching out.</p>
+              
+              <p style="font-size: 16px; margin-bottom: 16px;">At <strong>Zani. Studio</strong>, the goal is simple: stop paying for dead-end clicks and generic templates, and start building digital systems that automate your bookings and drive real revenue.</p>
+              
+              <p style="font-size: 16px; margin-bottom: 16px;">I am reviewing the information you provided${company ? ` for ${company}` : ""} and will be in touch within the next 24 to 48 hours to discuss your bottlenecks and how we can engineer a solution.</p>
+              
+              <p style="font-size: 16px; margin-bottom: 32px;">If you have any immediate thoughts or extra details to add, simply reply directly to this thread.</p>
+              
+              <hr style="border: none; border-top: 1px solid #D8D3C7; margin: 32px 0;" />
+              
+              <p style="font-size: 14px; color: #14171A; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px; font-weight: 700;">Zani.</p>
+              <p style="font-size: 12px; color: #8A8F94; margin-bottom: 8px;">Digital Architecture & Automation</p>
+              <a href="https://zanidev.site" style="color: #B4622A; text-decoration: none; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">zanidev.site</a>
+            </div>
+          `,
       },
       {
         from: fromFormatted,
