@@ -194,7 +194,7 @@ export default function Hero() {
             </Link>
 
             <Link
-              href="#case-studies"
+              href="/#work"
               className="flex w-full items-center justify-center gap-2 px-6 py-3.5 text-[13px] font-semibold tracking-tight underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 sm:w-auto sm:px-2 sm:py-4 sm:text-sm"
               style={{
                 color: TOKENS.ink,

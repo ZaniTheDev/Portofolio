@@ -170,7 +170,10 @@ export default function HowIWork() {
         borderColor: TOKENS.hairlineDark,
       }}
     >
-      <div className="mx-auto max-w-7xl px-6 py-24 sm:px-10 lg:py-32">
+      <div
+        className="mx-auto max-w-7xl px-6 py-24 sm:px-10 lg:py-32"
+        id="how-i-work"
+      >
         <div className="grid grid-cols-1 gap-16 lg:grid-cols-12 lg:gap-20">
           {/* Left Column: Sticky Header */}
           <div className="lg:col-span-5">
@@ -199,7 +202,7 @@ export default function HowIWork() {
 
               <div className="mt-12 hidden lg:block">
                 <a
-                  href="#contact"
+                  href="/audit"
                   className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-xs font-semibold uppercase tracking-wide underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70"
                   style={{
                     color: TOKENS.paper,
@@ -295,7 +298,7 @@ export default function HowIWork() {
               style={{ borderColor: TOKENS.hairlineDark }}
             >
               <a
-                href="#contact"
+                href="/audit"
                 className="inline-flex w-full items-center justify-center gap-2 bg-[#EDEAE3] py-4 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest text-[#14171A]"
               >
                 Initiate Project →

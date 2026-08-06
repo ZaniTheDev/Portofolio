@@ -4,12 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 
-/**
- * Same token set as hero.tsx. If you haven't already, pull TOKENS and the
- * three next/font declarations out into a shared lib/tokens.ts and
- * app/layout.tsx respectively — Navbar and Hero should not each be
- * instantiating their own copy of the same fonts.
- */
 const TOKENS = {
   paper: "#EDEAE3",
   ink: "#14171A",
@@ -19,11 +13,11 @@ const TOKENS = {
 };
 
 const links = [
-  { label: "Services", href: "#services" },
-  { label: "Industries", href: "#industries" },
-  { label: "Work", href: "#case-studies" },
-  { label: "How I Work", href: "#how-i-work" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Services", href: "/#services" },
+  { label: "Industries", href: "/#industries" },
+  { label: "Work", href: "/#work" },
+  { label: "How I Work", href: "/#how-i-work" },
+  { label: "Contact", href: "/#contact" },
 ];
 
 export default function Navbar() {
@@ -113,18 +107,20 @@ export default function Navbar() {
 
   return (
     <header className="fixed inset-x-0 top-0 z-50 font-[family-name:var(--font-body)]">
+      {/* Added relative and z-20 so the navbar sits ON TOP of the mobile menu overlay */}
       <nav
-        className="flex items-center justify-between border-b px-6 transition-[padding,background-color,border-color] duration-300 sm:px-10"
+        className="relative z-20 flex items-center justify-between border-b px-6 transition-[padding,background-color,border-color] duration-300 sm:px-10"
         style={{
-          backgroundColor: scrolled ? TOKENS.paper : "transparent",
-          borderColor: scrolled ? TOKENS.hairline : "transparent",
+          backgroundColor: scrolled || menuOpen ? TOKENS.paper : "transparent",
+          borderColor: scrolled && !menuOpen ? TOKENS.hairline : "transparent",
           paddingTop: scrolled ? "1rem" : "1.5rem",
           paddingBottom: scrolled ? "1rem" : "1.5rem",
         }}
       >
         {/* wordmark */}
         <Link
-          href="#top"
+          href="/"
+          onClick={() => setMenuOpen(false)}
           className="font-[family-name:var(--font-display)] text-xl font-extrabold tracking-tight focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
           style={{ color: TOKENS.ink, outlineColor: TOKENS.accent }}
         >
@@ -161,7 +157,7 @@ export default function Navbar() {
           </div>
 
           <Link
-            href="#contact"
+            href="/audit"
             className="hidden items-center gap-2 px-5 py-2.5 font-[family-name:var(--font-mono)] text-[11px] font-semibold uppercase tracking-wide transition-opacity hover:opacity-85 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 lg:inline-flex"
             style={{
               backgroundColor: TOKENS.ink,
@@ -181,11 +177,12 @@ export default function Navbar() {
             className="flex h-9 w-9 flex-col items-center justify-center gap-[5px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 lg:hidden"
             style={{ outlineColor: TOKENS.accent }}
           >
+            {/* Corrected the translation from 3px to 6px to create a pixel-perfect X */}
             <span
               className="h-px w-6 transition-transform duration-300"
               style={{
                 backgroundColor: TOKENS.ink,
-                transform: menuOpen ? "translateY(3px) rotate(45deg)" : "none",
+                transform: menuOpen ? "translateY(6px) rotate(45deg)" : "none",
               }}
             />
             <span
@@ -197,7 +194,7 @@ export default function Navbar() {
               style={{
                 backgroundColor: TOKENS.ink,
                 transform: menuOpen
-                  ? "translateY(-3px) rotate(-45deg)"
+                  ? "translateY(-6px) rotate(-45deg)"
                   : "none",
               }}
             />
@@ -205,11 +202,11 @@ export default function Navbar() {
         </div>
       </nav>
 
-      {/* mobile menu overlay */}
+      {/* mobile menu overlay - Added z-10 so it sits beneath the nav */}
       <div
         id="mobile-menu"
         ref={menuRef}
-        className="fixed inset-0 top-0 hidden flex-col justify-between px-6 pb-10 pt-24 sm:px-10 lg:hidden"
+        className="fixed inset-0 top-0 z-10 hidden flex-col justify-between px-6 pb-10 pt-24 sm:px-10 lg:hidden"
         style={{ backgroundColor: TOKENS.paper, display: "none" }}
       >
         <ul className="flex flex-col gap-1">
@@ -239,7 +236,7 @@ export default function Navbar() {
 
         <div className="flex flex-col gap-5">
           <Link
-            href="#contact"
+            href="/audit"
             onClick={() => setMenuOpen(false)}
             className="flex items-center justify-center gap-2 py-4 font-[family-name:var(--font-mono)] text-xs font-semibold uppercase tracking-wide"
             style={{ backgroundColor: TOKENS.ink, color: TOKENS.paper }}

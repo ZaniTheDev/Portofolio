@@ -6,6 +6,7 @@ import Industries from "../components/industries";
 import Work from "../components/work";
 import HowIWork from "../components/how-i-work";
 import Quote from "../components/quote";
+import Contact from "../components/contact";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
       <Work />
       <HowIWork />
       <Quote />
+      <Contact />
     </main>
   );
 }

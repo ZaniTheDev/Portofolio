@@ -156,7 +156,7 @@ export default function Industries() {
           </div>
         </div>
 
-        {/* Specialization grid with group-dimming */}
+        {/* Specialization grid with group-dimming isolated to desktop hover */}
         <div
           className="group/grid grid grid-cols-1 border-l border-t sm:grid-cols-2 lg:grid-cols-4"
           style={{ borderColor: "#D8D3C7" }}
@@ -168,37 +168,37 @@ export default function Industries() {
                 cellRefs.current[i] = el;
               }}
               tabIndex={0}
-              className="group/cell relative border-b border-r p-8 outline-none transition-all duration-500 hover:!opacity-100 group-hover/grid:opacity-40 focus-visible:ring-2 focus-visible:ring-inset"
+              className="group/cell relative border-b border-r p-8 outline-none transition-all duration-500 focus-visible:ring-2 focus-visible:ring-inset md:hover:!opacity-100 md:group-hover/grid:opacity-40"
               style={{
                 borderColor: "#D8D3C7",
                 outlineColor: "#B4622A",
               }}
             >
-              {/* hover tint */}
+              {/* hover tint - separated for mobile tap and desktop hover */}
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 group-hover/cell:opacity-100"
+                className="pointer-events-none absolute inset-0 -z-10 opacity-0 transition-opacity duration-500 max-md:group-focus/cell:opacity-100 md:group-hover/cell:opacity-100"
                 style={{ backgroundColor: "#E4E0D6" }}
               />
 
               {/* architectural corner bracket */}
               <span
                 aria-hidden
-                className="absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2 opacity-0 transition-all duration-300 group-hover/cell:-translate-x-6 group-hover/cell:translate-y-6 group-hover/cell:opacity-100"
+                className="absolute right-0 top-0 h-4 w-4 border-r-2 border-t-2 opacity-0 transition-all duration-300 max-md:group-focus/cell:-translate-x-6 max-md:group-focus/cell:translate-y-6 max-md:group-focus/cell:opacity-100 md:group-hover/cell:-translate-x-6 md:group-hover/cell:translate-y-6 md:group-hover/cell:opacity-100"
                 style={{ borderColor: "#B4622A" }}
               />
 
               {/* Top Row: Sector Code & Responsive Hint */}
               <div className="flex w-full items-center justify-between">
                 <span
-                  className="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-[0.14em] opacity-50 transition-colors duration-300 group-hover/cell:opacity-100 group-focus/cell:opacity-100"
+                  className="font-[family-name:var(--font-mono)] text-xs font-medium uppercase tracking-[0.14em] opacity-50 transition-colors duration-300 max-md:group-focus/cell:opacity-100 md:group-focus-visible/cell:opacity-100 md:group-hover/cell:opacity-100"
                   style={{ color: "#B4622A" }}
                 >
                   {industry.code}
                 </span>
 
-                {/* Visual Hint - Swaps text based on breakpoint and fades out on hover/focus */}
-                <span className="font-[family-name:var(--font-mono)] text-[9px] font-medium uppercase tracking-[0.2em] opacity-40 transition-opacity duration-300 group-hover/cell:opacity-0 group-focus-visible/cell:opacity-0 group-focus/cell:opacity-0">
+                {/* Visual Hint - Fades out specifically on mobile tap OR desktop hover */}
+                <span className="font-[family-name:var(--font-mono)] text-[9px] font-medium uppercase tracking-[0.2em] opacity-40 transition-opacity duration-300 max-md:group-focus/cell:opacity-0 md:group-focus-visible/cell:opacity-0 md:group-hover/cell:opacity-0">
                   <span className="md:hidden">Tap to reveal +</span>
                   <span className="hidden md:inline">Hover to reveal +</span>
                 </span>
@@ -212,15 +212,16 @@ export default function Industries() {
                 {industry.detail}
               </p>
 
-              {/* Expanding Explanation - Now reacts to standard focus for mobile taps */}
-              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out group-hover/cell:grid-rows-[1fr] group-focus-visible/cell:grid-rows-[1fr] group-focus/cell:grid-rows-[1fr]">
+              {/* Expanding Explanation - Grid Row Logic */}
+              <div className="grid grid-rows-[0fr] transition-[grid-template-rows] duration-500 ease-out max-md:group-focus/cell:grid-rows-[1fr] md:group-focus-visible/cell:grid-rows-[1fr] md:group-hover/cell:grid-rows-[1fr]">
                 <div className="overflow-hidden">
                   <div
                     className="mt-5 border-t pt-4"
                     style={{ borderColor: "rgba(216, 211, 199, 0.5)" }}
                   >
+                    {/* Expanding Explanation - Opacity Logic */}
                     <p
-                      className="font-[family-name:var(--font-body)] text-sm font-medium leading-relaxed opacity-0 transition-opacity duration-500 delay-100 group-hover/cell:opacity-100 group-focus-visible/cell:opacity-100 group-focus/cell:opacity-100"
+                      className="font-[family-name:var(--font-body)] text-sm font-medium leading-relaxed opacity-0 transition-opacity delay-100 duration-500 max-md:group-focus/cell:opacity-100 md:group-focus-visible/cell:opacity-100 md:group-hover/cell:opacity-100"
                       style={{ color: "#B4622A" }}
                     >
                       {industry.outcome}
@@ -238,7 +239,7 @@ export default function Industries() {
             Don&apos;t see your trade listed? I still might be a fit.
           </p>
           <a
-            href="#contact"
+            href="/audit"
             className="font-[family-name:var(--font-mono)] text-xs font-semibold uppercase tracking-[0.14em] underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
             style={{
               color: "#B4622A",

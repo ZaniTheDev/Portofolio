@@ -201,7 +201,7 @@ export default function Services() {
             Not sure which of these you actually need?
           </p>
           <a
-            href="#contact"
+            href="/audit"
             className="inline-flex items-center gap-2 font-[family-name:var(--font-mono)] text-xs font-semibold uppercase tracking-wide underline decoration-2 underline-offset-4 transition-opacity hover:opacity-70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4"
             style={{
               color: TOKENS.paper,

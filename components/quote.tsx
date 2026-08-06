@@ -5,6 +5,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
+import pfp from "../public/images/pfp.jpeg";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -167,7 +168,7 @@ export default function FoundersManifesto() {
                 Look directly at the camera. Look confident. 
               */}
               <Image
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=1000&auto=format&fit=crop"
+                src={pfp}
                 alt="Zani - System Architect"
                 fill
                 className="portrait-image object-cover filter grayscale"

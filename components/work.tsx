@@ -91,7 +91,7 @@ export default function FeaturedWorkDynamic() {
   );
 
   return (
-    <div ref={containerRef} className="w-full">
+    <div ref={containerRef} className="w-full" id="work">
       {/* 
         ======================================================================
         BLUEPRINT 01: PEST CONTROL SYSTEM (DARK MODE)
