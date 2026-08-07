@@ -6,6 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
+import type { StaticImageData } from "next/image";
+import PestControl from "../public/images/Cascade-pest-control.png";
+import CodePortfolio from "../public/images/code-portfolio.png";
+import VercelAnalytics from "../public/images/vercel-analytics.png";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger, Draggable, useGSAP);
@@ -33,8 +37,8 @@ function ImageSlider({
   alt,
   containerClassName,
 }: {
-  finishedSrc: string;
-  btsSrc: string;
+  finishedSrc: StaticImageData | string;
+  btsSrc: StaticImageData | string;
   alt: string;
   containerClassName: string;
 }) {
@@ -48,13 +52,17 @@ function ImageSlider({
         return;
 
       let containerWidth = containerRef.current.offsetWidth;
-      let currentProgress = 50;
+      let currentProgress = 20;
 
-      // Initialize the starting position (50% split)
-      gsap.set(handleRef.current, { x: containerWidth / 2 });
-      gsap.set(topLayerRef.current, {
-        clipPath: `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`,
-      });
+      const setClip = (progress: number) => {
+        gsap.set(topLayerRef.current, {
+          clipPath: `polygon(0% 0%, ${progress}% 0%, ${progress}% 100%, 0% 100%)`,
+        });
+      };
+
+      // Initialize the starting position (20% split)
+      gsap.set(handleRef.current, { x: (containerWidth / 100) * 20 });
+      setClip(20);
 
       // Initialize GSAP Draggable on the Handle
       const draggable = Draggable.create(handleRef.current, {
@@ -63,12 +71,36 @@ function ImageSlider({
         onDrag: function () {
           currentProgress = (this.x / containerRef.current!.offsetWidth) * 100;
           currentProgress = Math.max(0, Math.min(100, currentProgress));
-
-          gsap.set(topLayerRef.current, {
-            clipPath: `polygon(0% 0%, ${currentProgress}% 0%, ${currentProgress}% 100%, 0% 100%)`,
-          });
+          setClip(currentProgress);
         },
       });
+
+      // Auto-drag the handle as the user scrolls through the section
+      const scrollDrag = gsap.to(
+        { progress: 20 },
+        {
+          progress: 90,
+          ease: "none",
+          scrollTrigger: {
+            trigger: containerRef.current,
+            start: "top top+=200", // pins once the slider hits ~80px from top
+            end: "+=1000", // how much scroll distance the drag takes — tune this
+            scrub: 1,
+            pin: true,
+            pinSpacing: true, // pushes content below down to fill the pinned space
+            anticipatePin: 1, // smooths the pin-start on fast scrolls
+            // markers: true,       // uncomment while tuning start/end
+          },
+          onUpdate: function () {
+            currentProgress = this.targets()[0].progress;
+            const x = (currentProgress / 100) * containerWidth;
+
+            gsap.set(handleRef.current, { x });
+            setClip(currentProgress);
+            draggable[0].update(true);
+          },
+        },
+      );
 
       // Handle window resizes to maintain the percentage position
       const handleResize = () => {
@@ -81,11 +113,13 @@ function ImageSlider({
       };
 
       window.addEventListener("resize", handleResize);
-      return () => window.removeEventListener("resize", handleResize);
+      return () => {
+        window.removeEventListener("resize", handleResize);
+        scrollDrag.scrollTrigger?.kill();
+      };
     },
     { scope: containerRef },
   );
-
   return (
     <div
       ref={containerRef}
@@ -269,8 +303,8 @@ export default function FeaturedWorkDynamic() {
               {/* SLIDER INJECTED HERE */}
               <ImageSlider
                 containerClassName="aspect-[4/5] bg-[#1F2226] sm:aspect-[16/9] lg:aspect-[4/3]"
-                finishedSrc="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=2500&auto=format&fit=crop"
-                btsSrc="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2500&auto=format&fit=crop"
+                finishedSrc={PestControl}
+                btsSrc={CodePortfolio}
                 alt="Pest Control Lead System Architecture"
               />
 
@@ -384,7 +418,7 @@ export default function FeaturedWorkDynamic() {
               <ImageSlider
                 containerClassName="aspect-[4/5] bg-[#D8D3C7] sm:aspect-[16/9] lg:aspect-[4/3]"
                 finishedSrc="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2500&auto=format&fit=crop"
-                btsSrc="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2500&auto=format&fit=crop"
+                btsSrc={VercelAnalytics}
                 alt="Gym booking application architecture"
               />
 
