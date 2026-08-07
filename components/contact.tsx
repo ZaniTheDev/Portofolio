@@ -123,10 +123,10 @@ export default function Contact() {
                   Direct Inquiry
                 </p>
                 <a
-                  href="mailto:hello@zani.studio"
+                  href="mailto:hamzahtizani@gmail.com"
                   className="mt-3 block text-sm transition-opacity hover:opacity-70 sm:text-base"
                 >
-                  hello@zani.studio
+                  hamzahtizani@gmail.com
                 </a>
               </div>
               <div>
