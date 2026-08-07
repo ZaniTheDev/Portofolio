@@ -1,13 +1,14 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { Draggable } from "gsap/Draggable";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
 
 if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, useGSAP);
+  gsap.registerPlugin(ScrollTrigger, Draggable, useGSAP);
 }
 
 const TOKENS = {
@@ -21,6 +22,141 @@ const TOKENS = {
   hairlineLight: "rgba(20, 23, 26, 0.15)",
 };
 
+/**
+ * ======================================================================
+ * BEHIND THE SCENES SLIDER COMPONENT
+ * ======================================================================
+ */
+function ImageSlider({
+  finishedSrc,
+  btsSrc,
+  alt,
+  containerClassName,
+}: {
+  finishedSrc: string;
+  btsSrc: string;
+  alt: string;
+  containerClassName: string;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const topLayerRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(
+    () => {
+      if (!containerRef.current || !topLayerRef.current || !handleRef.current)
+        return;
+
+      let containerWidth = containerRef.current.offsetWidth;
+      let currentProgress = 50;
+
+      // Initialize the starting position (50% split)
+      gsap.set(handleRef.current, { x: containerWidth / 2 });
+      gsap.set(topLayerRef.current, {
+        clipPath: `polygon(0% 0%, 50% 0%, 50% 100%, 0% 100%)`,
+      });
+
+      // Initialize GSAP Draggable on the Handle
+      const draggable = Draggable.create(handleRef.current, {
+        type: "x",
+        bounds: containerRef.current,
+        onDrag: function () {
+          currentProgress = (this.x / containerRef.current!.offsetWidth) * 100;
+          currentProgress = Math.max(0, Math.min(100, currentProgress));
+
+          gsap.set(topLayerRef.current, {
+            clipPath: `polygon(0% 0%, ${currentProgress}% 0%, ${currentProgress}% 100%, 0% 100%)`,
+          });
+        },
+      });
+
+      // Handle window resizes to maintain the percentage position
+      const handleResize = () => {
+        if (!containerRef.current || !handleRef.current) return;
+        containerWidth = containerRef.current.offsetWidth;
+        const newX = (currentProgress / 100) * containerWidth;
+
+        gsap.set(handleRef.current, { x: newX });
+        draggable[0].update(true);
+      };
+
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    },
+    { scope: containerRef },
+  );
+
+  return (
+    <div
+      ref={containerRef}
+      className={`relative w-full overflow-hidden ${containerClassName}`}
+    >
+      {/* BASE LAYER (Behind The Scenes) */}
+      <div className="absolute inset-0 z-10 w-full h-full overflow-hidden">
+        <Image
+          src={btsSrc}
+          alt={`${alt} - Behind The Scenes`}
+          fill
+          className="parallax-image object-cover scale-[1.15]"
+        />
+        {/* Dark tint to differentiate the BTS shot */}
+        <div className="absolute inset-0 bg-black/50 pointer-events-none" />
+        <div className="absolute bottom-4 right-4 text-[10px] font-[family-name:var(--font-mono)] text-white/70 uppercase tracking-widest z-10 px-2 py-1 border border-white/20 bg-black/60 backdrop-blur-sm pointer-events-none">
+          Behind The Scenes
+        </div>
+      </div>
+
+      {/* TOP LAYER (Finished Result) */}
+      <div
+        ref={topLayerRef}
+        className="absolute inset-0 z-20 w-full h-full overflow-hidden"
+      >
+        <Image
+          src={finishedSrc}
+          alt={`${alt} - Finished Result`}
+          fill
+          className="parallax-image object-cover scale-[1.15]"
+        />
+        <div className="absolute inset-0 bg-black/20 mix-blend-multiply pointer-events-none" />
+        <div className="absolute bottom-4 left-4 text-[10px] font-[family-name:var(--font-mono)] text-white/90 uppercase tracking-widest z-10 px-2 py-1 border border-white/30 bg-black/40 backdrop-blur-sm pointer-events-none">
+          Final Output
+        </div>
+      </div>
+
+      {/* DRAG HANDLE */}
+      <div
+        ref={handleRef}
+        className="absolute top-0 bottom-0 left-0 w-1 cursor-ew-resize z-30 flex items-center justify-center -ml-[2px]"
+        aria-label="Drag to compare before and after"
+      >
+        {/* The thin vertical line */}
+        <div className="absolute inset-y-0 left-1/2 w-[2px] -ml-[1px] bg-[#B4622A] pointer-events-none shadow-[0_0_10px_rgba(0,0,0,0.5)]" />
+
+        {/* The grab circle */}
+        <div className="relative w-8 h-8 bg-[#B4622A] rounded-full flex items-center justify-center shadow-xl border-2 border-white pointer-events-none">
+          <svg
+            width="14"
+            height="14"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="white"
+            strokeWidth="2.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <path d="M9 18l-6-6 6-6M15 18l6-6-6-6" />
+          </svg>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * ======================================================================
+ * MAIN PAGE COMPONENT
+ * ======================================================================
+ */
 export default function FeaturedWorkDynamic() {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -32,12 +168,13 @@ export default function FeaturedWorkDynamic() {
         const sections = gsap.utils.toArray(".project-section");
 
         sections.forEach((section: any) => {
-          const image = section.querySelector(".parallax-image");
+          // Changed to querySelectorAll so it grabs BOTH images in the slider
+          const images = section.querySelectorAll(".parallax-image");
           const stat = section.querySelector(".floating-stat");
           const texts = section.querySelectorAll(".reveal-text");
 
-          if (image) {
-            gsap.to(image, {
+          if (images.length) {
+            gsap.to(images, {
               yPercent: 15,
               ease: "none",
               scrollTrigger: {
@@ -129,18 +266,16 @@ export default function FeaturedWorkDynamic() {
 
           <div className="relative grid grid-cols-1 lg:grid-cols-12">
             <div className="relative z-0 lg:col-span-8 lg:col-start-5">
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#1F2226] sm:aspect-[16/9] lg:aspect-[4/3]">
-                <Image
-                  src="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=2500&auto=format&fit=crop"
-                  alt="Pest Control Lead System Architecture"
-                  fill
-                  className="parallax-image object-cover scale-[1.15]"
-                />
-                <div className="absolute inset-0 bg-black/20 mix-blend-multiply" />
-              </div>
+              {/* SLIDER INJECTED HERE */}
+              <ImageSlider
+                containerClassName="aspect-[4/5] bg-[#1F2226] sm:aspect-[16/9] lg:aspect-[4/3]"
+                finishedSrc="https://images.unsplash.com/photo-1616423640778-28d1b53229bd?q=80&w=2500&auto=format&fit=crop"
+                btsSrc="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2500&auto=format&fit=crop"
+                alt="Pest Control Lead System Architecture"
+              />
 
               <div
-                className="floating-stat absolute -bottom-10 right-4 z-20 w-48 border bg-[#EDEAE3] p-5 shadow-2xl sm:-left-10 sm:bottom-10 sm:right-auto sm:w-56 lg:-left-20 lg:bottom-20 lg:w-64"
+                className="floating-stat absolute -bottom-10 right-4 z-40 w-48 border bg-[#EDEAE3] p-5 shadow-2xl sm:-left-10 sm:bottom-10 sm:right-auto sm:w-56 lg:-left-20 lg:bottom-20 lg:w-64"
                 style={{ borderColor: TOKENS.ink }}
               >
                 <div className="flex items-center gap-2 border-b border-[#14171A]/20 pb-3">
@@ -163,11 +298,11 @@ export default function FeaturedWorkDynamic() {
               </div>
             </div>
 
-            <div className="relative z-10 mt-12 bg-[#14171A] p-6 lg:col-span-6 lg:col-start-1 lg:row-start-1 lg:-mr-32 lg:mt-32 lg:p-12 lg:pl-0 lg:shadow-[-20px_0_40px_rgba(20,23,26,1)]">
-              <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+            <div className="relative z-10 mt-12 bg-[#14171A] p-6 lg:col-span-6 lg:col-start-1 lg:row-start-1 lg:-mr-32 lg:mt-32 lg:p-12 lg:pl-0 lg:shadow-[-20px_0_40px_rgba(20,23,26,1)] pointer-events-none">
+              <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl pointer-events-auto">
                 Engineered for immediate dispatches.
               </h2>
-              <dl className="mt-12 flex flex-col gap-10 border-l border-[#B4622A]/30 pl-6">
+              <dl className="mt-12 flex flex-col gap-10 border-l border-[#B4622A]/30 pl-6 pointer-events-auto">
                 <div className="reveal-text">
                   <dt
                     className="mb-3 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-widest"
@@ -245,17 +380,16 @@ export default function FeaturedWorkDynamic() {
 
           <div className="relative grid grid-cols-1 lg:grid-cols-12">
             <div className="relative z-0 lg:col-span-8 lg:col-start-1">
-              <div className="relative aspect-[4/5] w-full overflow-hidden bg-[#D8D3C7] sm:aspect-[16/9] lg:aspect-[4/3]">
-                <Image
-                  src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2500&auto=format&fit=crop"
-                  alt="Gym booking application architecture"
-                  fill
-                  className="parallax-image object-cover scale-[1.15]"
-                />
-              </div>
+              {/* SLIDER INJECTED HERE */}
+              <ImageSlider
+                containerClassName="aspect-[4/5] bg-[#D8D3C7] sm:aspect-[16/9] lg:aspect-[4/3]"
+                finishedSrc="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2500&auto=format&fit=crop"
+                btsSrc="https://images.unsplash.com/photo-1581291518857-4e27b48ff24e?q=80&w=2500&auto=format&fit=crop"
+                alt="Gym booking application architecture"
+              />
 
               <div
-                className="floating-stat absolute -bottom-10 left-4 z-20 w-48 border bg-[#14171A] p-5 shadow-2xl sm:-right-10 sm:bottom-10 sm:left-auto sm:w-56 lg:-right-20 lg:bottom-20 lg:w-64"
+                className="floating-stat absolute -bottom-10 left-4 z-40 w-48 border bg-[#14171A] p-5 shadow-2xl sm:-right-10 sm:bottom-10 sm:left-auto sm:w-56 lg:-right-20 lg:bottom-20 lg:w-64"
                 style={{ borderColor: TOKENS.hairlineDark }}
               >
                 <div className="flex items-center gap-2 border-b border-[#EDEAE3]/20 pb-3">
@@ -278,11 +412,11 @@ export default function FeaturedWorkDynamic() {
               </div>
             </div>
 
-            <div className="relative z-10 mt-12 bg-[#EDEAE3] p-6 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:-ml-32 lg:mt-32 lg:p-12 lg:pr-0 lg:shadow-[20px_0_40px_rgba(228,224,214,1)]">
-              <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl">
+            <div className="relative z-10 mt-12 bg-[#EDEAE3] p-6 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:-ml-32 lg:mt-32 lg:p-12 lg:pr-0 lg:shadow-[20px_0_40px_rgba(228,224,214,1)] pointer-events-none">
+              <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl pointer-events-auto">
                 Automating trial conversions completely.
               </h2>
-              <dl className="mt-12 flex flex-col gap-10 border-l border-[#B4622A]/30 pl-6">
+              <dl className="mt-12 flex flex-col gap-10 border-l border-[#B4622A]/30 pl-6 pointer-events-auto">
                 <div className="reveal-text">
                   <dt
                     className="mb-3 font-[family-name:var(--font-mono)] text-[11px] uppercase tracking-widest"
@@ -318,7 +452,7 @@ export default function FeaturedWorkDynamic() {
                 </div>
               </dl>
 
-              <div className="reveal-text mt-12 pt-8">
+              <div className="reveal-text mt-12 pt-8 pointer-events-auto">
                 <a
                   href="#contact"
                   className="group inline-flex items-center gap-3 font-[family-name:var(--font-mono)] text-xs font-bold uppercase tracking-widest transition-opacity hover:opacity-70"
