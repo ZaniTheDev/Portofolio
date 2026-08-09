@@ -29,15 +29,6 @@ const mono = IBM_Plex_Mono({
   weight: ["500"],
 });
 
-/**
- * Design tokens for this component.
- * paper   — warm stone background, not the AI-cliche cream
- * ink     — near-black text, not pure #000
- * accent  — copper/brass, pulled from trade materials (pipe, flashing,
- *           HVAC line-set), not a SaaS gradient orange
- * trust   — deep forest, used sparingly, reads as "growth / money"
- * hairline— border color used everywhere instead of shadows
- */
 const TOKENS = {
   paper: "#EDEAE3",
   paperDeep: "#E4E0D6",
@@ -89,7 +80,9 @@ export default function Hero() {
       }
 
       gsap.set(".hero-eyebrow", { opacity: 0, y: 12 });
-      gsap.set(".hero-line-inner", { yPercent: 110 });
+
+      // Increased to 150 to ensure text starts completely below our newly expanded clipping mask
+      gsap.set(".hero-line-inner", { yPercent: 150 });
       gsap.set([".hero-sub", ".hero-cta", ".hero-tags"], { opacity: 0, y: 16 });
       gsap.set(".hero-ticket", { opacity: 0, x: 28 });
 
@@ -120,7 +113,7 @@ export default function Hero() {
       className={`${display.variable} ${body.variable} ${mono.variable} relative overflow-hidden bg-[#EDEAE3] font-[family-name:var(--font-body)]`}
       style={{ backgroundColor: TOKENS.paper }}
     >
-      {/* faint structural rule grid, purely to ground the layout — not decoration for its own sake */}
+      {/* faint structural rule grid */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 hidden h-full lg:block"
@@ -132,8 +125,12 @@ export default function Hero() {
         }}
       />
 
-      {/* Adjusted mobile padding and gaps (px-5, pt-24, pb-16, gap-10) while keeping sm/lg desktop variants */}
-      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 pb-16 pt-24 sm:gap-14 sm:px-10 sm:pb-20 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:pb-28 lg:pt-44">
+      {/* 
+        Replaced the static 'lg:pt-44 lg:pb-28' with dynamic clamp() values. 
+        This is 100% Tailwind v4 compliant and fluidly scales padding based on viewport height,
+        preventing the section from being chopped off on 720p screens. 
+      */}
+      <div className="relative mx-auto grid max-w-7xl grid-cols-1 gap-10 px-5 pb-16 pt-24 sm:gap-14 sm:px-10 sm:pb-20 sm:pt-36 lg:grid-cols-12 lg:gap-8 lg:pt-[clamp(6rem,15vh,11rem)] lg:pb-[clamp(4rem,10vh,7rem)]">
         {/* LEFT: headline column */}
         <div className="lg:col-span-7">
           <p
@@ -153,7 +150,15 @@ export default function Hero() {
             style={{ color: TOKENS.ink }}
           >
             {headlineLines.map((line, i) => (
-              <span key={i} className="block overflow-hidden">
+              /* 
+                Added pt/pb and negative margins to symmetrically expand the clipping mask.
+                This gives letters like 'j', 'g', and 'p' enough room so their bottoms don't get chopped off, 
+                without actually changing your tight visual line height.
+              */
+              <span
+                key={i}
+                className="block overflow-hidden pt-[0.1em] pb-[0.3em] -mt-[0.1em] -mb-[0.3em]"
+              >
                 <span
                   className="hero-line-inner block"
                   style={i === 1 ? { color: TOKENS.accent } : undefined}
@@ -173,7 +178,6 @@ export default function Hero() {
             automate the busywork eating into your week.
           </p>
 
-          {/* Adjusted to items-stretch on mobile for full-width tap targets */}
           <div className="hero-cta mt-8 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center sm:gap-4">
             <Link
               href="#contact"
@@ -231,7 +235,6 @@ export default function Hero() {
               backgroundColor: TOKENS.paperDeep,
             }}
           >
-            {/* ticket punch holes - positioned slightly differently for mobile */}
             <div
               aria-hidden
               className="absolute -top-2 left-5 h-4 w-4 rounded-full sm:left-8"

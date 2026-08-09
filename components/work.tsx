@@ -83,13 +83,13 @@ function ImageSlider({
           ease: "none",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top top+=200", // pins once the slider hits ~80px from top
-            end: "+=1000", // how much scroll distance the drag takes — tune this
+            // CHANGED: From rigid "top top+=200" to fluid viewport center
+            start: "center center",
+            end: "+=1000",
             scrub: 1,
             pin: true,
-            pinSpacing: true, // pushes content below down to fill the pinned space
-            anticipatePin: 1, // smooths the pin-start on fast scrolls
-            // markers: true,       // uncomment while tuning start/end
+            pinSpacing: true,
+            anticipatePin: 1,
           },
           onUpdate: function () {
             currentProgress = this.targets()[0].progress;
@@ -202,7 +202,6 @@ export default function FeaturedWorkDynamic() {
         const sections = gsap.utils.toArray(".project-section");
 
         sections.forEach((section: any) => {
-          // Changed to querySelectorAll so it grabs BOTH images in the slider
           const images = section.querySelectorAll(".parallax-image");
           const stat = section.querySelector(".floating-stat");
           const texts = section.querySelectorAll(".reveal-text");
@@ -268,8 +267,9 @@ export default function FeaturedWorkDynamic() {
         BLUEPRINT 01: PEST CONTROL SYSTEM (DARK MODE)
         ======================================================================
       */}
+      {/* CHANGED: pt-24 pb-32 to fluid clamps */}
       <section
-        className="project-section relative w-full overflow-hidden pb-32 pt-24"
+        className="project-section relative w-full overflow-hidden pb-[clamp(4rem,15vh,8rem)] pt-[clamp(4rem,10vh,6rem)]"
         style={{ backgroundColor: TOKENS.ink, color: TOKENS.paper }}
       >
         <div
@@ -301,8 +301,9 @@ export default function FeaturedWorkDynamic() {
           <div className="relative grid grid-cols-1 lg:grid-cols-12">
             <div className="relative z-0 lg:col-span-8 lg:col-start-5">
               {/* SLIDER INJECTED HERE */}
+              {/* CHANGED: Added max-h-[75vh] so it never stretches taller than a laptop screen */}
               <ImageSlider
-                containerClassName="aspect-[4/5] bg-[#1F2226] sm:aspect-[16/9] lg:aspect-[4/3]"
+                containerClassName="max-h-[75vh] aspect-[4/5] bg-[#1F2226] sm:aspect-[16/9] lg:aspect-[4/3]"
                 finishedSrc={PestControl}
                 btsSrc={CodePortfolio}
                 alt="Pest Control Lead System Architecture"
@@ -332,7 +333,8 @@ export default function FeaturedWorkDynamic() {
               </div>
             </div>
 
-            <div className="relative z-10 mt-12 bg-[#14171A] p-6 lg:col-span-6 lg:col-start-1 lg:row-start-1 lg:-mr-32 lg:mt-32 lg:p-12 lg:pl-0 lg:shadow-[-20px_0_40px_rgba(20,23,26,1)] pointer-events-none">
+            {/* CHANGED: lg:mt-32 to lg:mt-[clamp(2rem,10vh,8rem)] */}
+            <div className="relative z-10 mt-12 bg-[#14171A] p-6 lg:col-span-6 lg:col-start-1 lg:row-start-1 lg:-mr-32 lg:mt-[clamp(2rem,10vh,8rem)] lg:p-12 lg:pl-0 lg:shadow-[-20px_0_40px_rgba(20,23,26,1)] pointer-events-none">
               <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl pointer-events-auto">
                 Engineered for immediate dispatches.
               </h2>
@@ -382,8 +384,9 @@ export default function FeaturedWorkDynamic() {
         BLUEPRINT 02: GYM & FITNESS SYSTEM (LIGHT MODE)
         ======================================================================
       */}
+      {/* CHANGED: pt-24 pb-32 to fluid clamps */}
       <section
-        className="project-section relative w-full overflow-hidden pb-32 pt-24"
+        className="project-section relative w-full overflow-hidden pb-[clamp(4rem,15vh,8rem)] pt-[clamp(4rem,10vh,6rem)]"
         style={{ backgroundColor: TOKENS.paper, color: TOKENS.ink }}
       >
         <div
@@ -415,8 +418,9 @@ export default function FeaturedWorkDynamic() {
           <div className="relative grid grid-cols-1 lg:grid-cols-12">
             <div className="relative z-0 lg:col-span-8 lg:col-start-1">
               {/* SLIDER INJECTED HERE */}
+              {/* CHANGED: Added max-h-[75vh] */}
               <ImageSlider
-                containerClassName="aspect-[4/5] bg-[#D8D3C7] sm:aspect-[16/9] lg:aspect-[4/3]"
+                containerClassName="max-h-[75vh] aspect-[4/5] bg-[#D8D3C7] sm:aspect-[16/9] lg:aspect-[4/3]"
                 finishedSrc="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=2500&auto=format&fit=crop"
                 btsSrc={VercelAnalytics}
                 alt="Gym booking application architecture"
@@ -446,7 +450,8 @@ export default function FeaturedWorkDynamic() {
               </div>
             </div>
 
-            <div className="relative z-10 mt-12 bg-[#EDEAE3] p-6 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:-ml-32 lg:mt-32 lg:p-12 lg:pr-0 lg:shadow-[20px_0_40px_rgba(228,224,214,1)] pointer-events-none">
+            {/* CHANGED: lg:mt-32 to lg:mt-[clamp(2rem,10vh,8rem)] */}
+            <div className="relative z-10 mt-12 bg-[#EDEAE3] p-6 lg:col-span-6 lg:col-start-7 lg:row-start-1 lg:-ml-32 lg:mt-[clamp(2rem,10vh,8rem)] lg:p-12 lg:pr-0 lg:shadow-[20px_0_40px_rgba(228,224,214,1)] pointer-events-none">
               <h2 className="reveal-text font-[family-name:var(--font-display)] text-5xl font-extrabold leading-[0.95] tracking-tight sm:text-6xl lg:text-7xl pointer-events-auto">
                 Automating trial conversions completely.
               </h2>
