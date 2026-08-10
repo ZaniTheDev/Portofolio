@@ -1,11 +1,11 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import Image from "next/image";
-// Replace these with actual images of your setup, sketches, coffee, etc.
+
 import workspace1 from "../../public/images/about/team.jpg";
 import workspace2 from "../../public/images/about/team1.jpg";
 import workspace3 from "../../public/images/about/spotify.png";
@@ -26,13 +26,17 @@ const TOKENS = {
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLDivElement>(null);
+  const [activeImage, setActiveImage] = useState<{
+    src: any;
+    alt: string;
+    caption: string;
+  } | null>(null);
 
   useGSAP(
     () => {
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
-        // Shared reveal animation for sections
         const revealElements = gsap.utils.toArray(".reveal-up");
         revealElements.forEach((el: any) => {
           gsap.fromTo(
@@ -51,7 +55,6 @@ export default function AboutPage() {
           );
         });
 
-        // Staggered lists (Process & Expectations)
         gsap.fromTo(
           ".process-step",
           { opacity: 0, x: -20 },
@@ -72,6 +75,27 @@ export default function AboutPage() {
     { scope: containerRef },
   );
 
+  const workspaceImages = [
+    {
+      src: workspace1,
+      alt: "Post Graduation",
+      caption: "Good people, good memories.",
+      layoutClass: "",
+    },
+    {
+      src: workspace2,
+      alt: "Hanging out with friends",
+      caption: "Just another day with the people who make it fun.",
+      layoutClass: "sm:mt-12",
+    },
+    {
+      src: workspace3,
+      alt: "spotify",
+      caption: "Usually have music playing somewhere in the background.",
+      layoutClass: "",
+    },
+  ];
+
   return (
     <div
       ref={containerRef}
@@ -84,7 +108,7 @@ export default function AboutPage() {
       >
         <div className="mx-auto w-full max-w-5xl">
           <h1 className="reveal-up font-[family-name:var(--font-display)] text-[3rem] font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-[5.5rem]">
-            I don't build websites to win design awards.
+            I care more about making things work well.
           </h1>
           <p
             className="reveal-up mt-10 max-w-2xl text-xl leading-relaxed sm:text-2xl"
@@ -103,7 +127,6 @@ export default function AboutPage() {
         style={{ backgroundColor: TOKENS.ink, color: TOKENS.paper }}
       >
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-20 lg:grid-cols-2">
-          {/* Your Story */}
           <div className="reveal-up">
             <span
               className="mb-6 block font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em]"
@@ -137,7 +160,6 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Your Philosophy */}
           <div
             className="reveal-up lg:border-l lg:pl-20"
             style={{ borderColor: TOKENS.hairlineDark }}
@@ -196,7 +218,6 @@ export default function AboutPage() {
         style={{ backgroundColor: TOKENS.paper, color: TOKENS.ink }}
       >
         <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-20 lg:grid-cols-2">
-          {/* How I Work */}
           <div>
             <div className="reveal-up mb-12">
               <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight">
@@ -247,7 +268,6 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* What you can expect */}
           <div className="lg:pl-20">
             <div className="reveal-up mb-12">
               <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight">
@@ -333,32 +353,44 @@ export default function AboutPage() {
             </p>
           </div>
 
-          {/* Workspace Image Grid (Replace src with your actual photos) */}
+          {/* Subheader hint for the grid */}
+          <div className="reveal-up mb-6 flex items-center justify-between">
+            <span
+              className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em]"
+              style={{ color: TOKENS.accent }}
+            >
+              Glimpses
+            </span>
+            <span
+              className="font-[family-name:var(--font-mono)] text-xs tracking-wide"
+              style={{ color: TOKENS.mutedDark }}
+            >
+              [ Click any image to expand ]
+            </span>
+          </div>
+
+          {/* REFACTORED IMAGE GRID */}
           <div className="reveal-up grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <div className="relative aspect-square w-full overflow-hidden bg-[#D8D3C7]">
-              <Image
-                src={workspace1}
-                alt="My desk setup"
-                fill
-                className="object-cover filter grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            </div>
-            <div className="relative aspect-square w-full overflow-hidden bg-[#D8D3C7] sm:mt-12">
-              <Image
-                src={workspace2}
-                alt="Code and terminal"
-                fill
-                className="object-cover filter grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            </div>
-            <div className="relative aspect-square w-full overflow-hidden bg-[#D8D3C7]">
-              <Image
-                src={workspace3}
-                alt="Notebook and sketches"
-                fill
-                className="object-cover filter grayscale hover:grayscale-0 transition-all duration-700"
-              />
-            </div>
+            {workspaceImages.map((img, index) => (
+              <div
+                key={index}
+                onClick={() => setActiveImage(img)}
+                className={`relative aspect-square w-full overflow-hidden bg-[#D8D3C7] cursor-pointer group ${img.layoutClass}`}
+              >
+                <Image
+                  src={img.src}
+                  alt={img.alt}
+                  fill
+                  className="object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
+                />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+
+                {/* Subtle hover badge right on the image */}
+                <div className="absolute bottom-3 right-3 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-[#14171A]/80 backdrop-blur-md px-3 py-1.5 rounded text-[10px] font-[family-name:var(--font-mono)] uppercase tracking-wider text-[#EDEAE3]">
+                  View full image
+                </div>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -393,6 +425,51 @@ export default function AboutPage() {
           </a>
         </div>
       </section>
+
+      {/* THE LIGHTBOX OVERLAY */}
+      {activeImage && (
+        <div
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#14171A]/95 p-6 backdrop-blur-sm transition-opacity"
+          onClick={() => setActiveImage(null)}
+        >
+          <button
+            onClick={() => setActiveImage(null)}
+            className="absolute right-6 top-6 p-2 text-[#EDEAE3] hover:text-[#B4622A] transition-colors z-50"
+            aria-label="Close modal"
+          >
+            <svg
+              width="32"
+              height="32"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+
+          <div
+            className="relative flex w-full max-w-5xl flex-1 flex-col items-center justify-center"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="relative w-full max-w-4xl aspect-[4/3] sm:aspect-video">
+              <Image
+                src={activeImage.src}
+                alt={activeImage.alt}
+                fill
+                className="object-contain"
+              />
+            </div>
+            <p className="mt-6 text-center font-[family-name:var(--font-mono)] text-sm tracking-wide text-[#EDEAE3]">
+              {activeImage.caption}
+            </p>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
