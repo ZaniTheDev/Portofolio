@@ -4,7 +4,16 @@
   --background: #ffffff;
   --foreground: #171717;
 }
+@theme {
+  --font-display: var(--font-display);
+  --font-body: var(--font-body);
+  --font-mono: var(--font-mono);
+}
 
+/* Ensure smooth scrolling across the app */
+html {
+  scroll-behavior: smooth;
+}
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

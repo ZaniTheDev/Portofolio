@@ -1,475 +1,472 @@
 "use client";
 
-import { useRef, useState } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { useGSAP } from "@gsap/react";
+import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import teamPhoto from "../../public/images/about/team.jpg";
+import teamPhoto2 from "../../public/images/about/team1.jpg";
+import spotify from "../../public/images/about/spotify.png";
 
-import workspace1 from "../../public/images/about/team.jpg";
-import workspace2 from "../../public/images/about/team1.jpg";
-import workspace3 from "../../public/images/about/spotify.png";
+gsap.registerPlugin(ScrollTrigger);
 
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger, useGSAP);
-}
-
-const TOKENS = {
-  ink: "#14171A",
-  paper: "#EDEAE3",
-  accent: "#B4622A",
-  mutedDark: "rgba(20, 23, 26, 0.5)",
-  mutedLight: "rgba(237, 234, 227, 0.5)",
-  hairlineLight: "rgba(20, 23, 26, 0.15)",
-  hairlineDark: "rgba(237, 234, 227, 0.15)",
+type Photo = {
+  id: string;
+  src: any;
+  alt: string;
+  captionTitle: string;
+  captionText: string;
+  aspectRatio: string;
 };
+
+const PHOTOS: Photo[] = [
+  {
+    id: "friends",
+    src: teamPhoto,
+    alt: "Hanging out with friends",
+    captionTitle: "Friends",
+    captionText: "Good people, good memories.",
+    aspectRatio: "aspect-[3/4]",
+  },
+  {
+    id: "spotify",
+    src: spotify,
+    alt: "Spotify playing music",
+    captionTitle: "Spotify",
+    captionText: "Usually have music playing somewhere in the background.",
+    aspectRatio: "aspect-[4/3]",
+  },
+  {
+    id: "routine",
+    src: teamPhoto2,
+    alt: "Daily routine",
+    captionTitle: "Having fun :)",
+    captionText: "Just hanging out at my house",
+    aspectRatio: "aspect-square",
+  },
+];
+
+function Lightbox({
+  photo,
+  onClose,
+}: {
+  photo: Photo | null;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [onClose]);
+
+  if (!photo) return null;
+
+  return (
+    <div
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#14171A]/95 backdrop-blur-md p-4 md:p-12 transition-opacity"
+      onClick={onClose}
+      role="dialog"
+      aria-modal="true"
+    >
+      <div
+        className="relative max-w-5xl w-full h-full flex flex-col items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <button
+          className="absolute top-4 right-4 text-[#EDEAE3] font-mono text-sm uppercase tracking-widest hover:text-[#B4622A] transition-colors focus:outline-none px-4 py-2"
+          onClick={onClose}
+          aria-label="Close lightbox"
+        >
+          [ Close ]
+        </button>
+        <div className="relative w-full max-h-[75vh] flex justify-center border border-[#EDEAE3]/10 bg-[#14171A] p-2">
+          <Image
+            src={photo.src}
+            alt={photo.alt}
+            className="object-contain max-h-[73vh] w-auto"
+          />
+        </div>
+        <div className="mt-6 flex flex-col items-center text-center text-[#EDEAE3]">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-1">
+            {photo.captionTitle}
+          </p>
+          <p className="text-sm font-body text-[#EDEAE3]/80">
+            {photo.captionText}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function AboutPage() {
   const containerRef = useRef<HTMLDivElement>(null);
-  const [activeImage, setActiveImage] = useState<{
-    src: any;
-    alt: string;
-    caption: string;
-  } | null>(null);
+  const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
 
-  useGSAP(
-    () => {
-      const mm = gsap.matchMedia();
-
-      mm.add("(prefers-reduced-motion: no-preference)", () => {
-        const revealElements = gsap.utils.toArray(".reveal-up");
-        revealElements.forEach((el: any) => {
-          gsap.fromTo(
-            el,
-            { y: 30, opacity: 0 },
-            {
-              y: 0,
-              opacity: 1,
-              duration: 0.8,
-              ease: "power3.out",
-              scrollTrigger: {
-                trigger: el,
-                start: "top 85%",
-              },
-            },
-          );
-        });
-
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>(".gsap-reveal").forEach((el) => {
         gsap.fromTo(
-          ".process-step",
-          { opacity: 0, x: -20 },
+          el,
+          { autoAlpha: 0, y: 30, clipPath: "inset(100% 0 0 0)" },
           {
-            opacity: 1,
-            x: 0,
-            stagger: 0.15,
-            duration: 0.6,
-            ease: "power2.out",
+            autoAlpha: 1,
+            y: 0,
+            clipPath: "inset(0% 0 0 0)",
+            duration: 1,
+            ease: "power3.out",
             scrollTrigger: {
-              trigger: "#process-list",
-              start: "top 75%",
+              trigger: el,
+              start: "top 85%",
             },
           },
         );
       });
-    },
-    { scope: containerRef },
-  );
 
-  const workspaceImages = [
-    {
-      src: workspace1,
-      alt: "Post Graduation",
-      caption: "Good people, good memories.",
-      layoutClass: "",
-    },
-    {
-      src: workspace2,
-      alt: "Hanging out with friends",
-      caption: "Just another day with the people who make it fun.",
-      layoutClass: "sm:mt-12",
-    },
-    {
-      src: workspace3,
-      alt: "spotify",
-      caption: "Usually have music playing somewhere in the background.",
-      layoutClass: "",
-    },
-  ];
+      gsap.utils.toArray<HTMLElement>(".gsap-line").forEach((line) => {
+        gsap.fromTo(
+          line,
+          { scaleX: 0 },
+          {
+            scaleX: 1,
+            duration: 1.5,
+            ease: "expo.out",
+            transformOrigin: "left center",
+            scrollTrigger: {
+              trigger: line,
+              start: "top 90%",
+            },
+          },
+        );
+      });
+
+      gsap.utils
+        .toArray<HTMLElement>(".gsap-image-container")
+        .forEach((container) => {
+          const img = container.querySelector("img");
+          if (img) {
+            gsap.fromTo(
+              img,
+              { yPercent: -10, scale: 1.1 },
+              {
+                yPercent: 10,
+                scale: 1,
+                ease: "none",
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top bottom",
+                  end: "bottom top",
+                  scrub: true,
+                },
+              },
+            );
+          }
+        });
+    }, containerRef);
+
+    return () => ctx.revert();
+  }, []);
 
   return (
-    <div
+    <main
       ref={containerRef}
-      className="w-full font-[family-name:var(--font-body)] selection:bg-[#B4622A] selection:text-[#EDEAE3]"
+      className="min-h-screen font-body overflow-hidden bg-[#EDEAE3] text-[#14171A] selection:bg-[#B4622A] selection:text-[#EDEAE3]"
     >
-      {/* 1. STRONG OPENING */}
-      <section
-        className="relative flex min-h-[70vh] w-full flex-col justify-center px-6 pt-32 sm:px-10"
-        style={{ backgroundColor: TOKENS.paper, color: TOKENS.ink }}
-      >
-        <div className="mx-auto w-full max-w-5xl">
-          <h1 className="reveal-up font-[family-name:var(--font-display)] text-[3rem] font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-[5.5rem]">
-            I care more about making things work well.
-          </h1>
-          <p
-            className="reveal-up mt-10 max-w-2xl text-xl leading-relaxed sm:text-2xl"
-            style={{ color: TOKENS.mutedDark }}
-          >
-            When you work with me, you aren't hiring a massive agency. You're
-            hiring a person who genuinely enjoys figuring out how things work,
-            and how they can work better.
-          </p>
+      {/* 01 — WHO */}
+      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-end relative z-10">
+          <div className="md:col-span-8 gsap-reveal">
+            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-8">
+              01 — Who
+            </span>
+            <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-bold leading-[0.9] tracking-tighter">
+              So, who <br /> is Zani?
+            </h1>
+          </div>
+          <div className="md:col-span-4 pb-2 md:pb-4 gsap-reveal">
+            <p className="text-lg md:text-xl leading-relaxed text-[#14171A]/80 font-body border-l border-[#B4622A] pl-6">
+              I'm 18, from Indonesia, and I spend a probably unreasonable amount
+              of time building things on a laptop that doesn't even have an
+              extra M.2 slot.
+            </p>
+          </div>
+        </div>
+        <hr className="mt-32 border-t border-[#14171A]/20 gsap-line origin-left" />
+      </section>
+
+      {/* 02 — HOW IT STARTED (Now with Hardware Prototype Image) */}
+      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10 relative">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div className="md:col-span-4 md:sticky md:top-32 self-start gsap-reveal">
+            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+              02 — How it started
+            </span>
+            <div className="w-12 h-[1px] bg-[#14171A]"></div>
+          </div>
+
+          <div className="md:col-span-7 md:col-start-6">
+            <div className="space-y-12 text-2xl md:text-4xl font-display font-medium leading-tight text-[#14171A] gsap-reveal">
+              <p>
+                I started coding because I wanted to make a video game. Way back
+                in 2015, I found Unity and thought it would be cool to make
+                something of my own. I had no idea what I was doing, I just
+                wanted to understand how games actually worked.
+              </p>
+              <p className="text-[#14171A]/50">
+                I never really lost that curiosity. What started with trying to
+                make a game eventually turned into building websites, learning
+                how software works, and spending an unreasonable amount of time
+                figuring out why something I wrote wasn't working.
+              </p>
+            </div>
+
+            {/* Archival Hardware Image Insert */}
+            <div className="my-16 gsap-reveal border border-[#14171A]/10 bg-[#14171A]/5 p-2 md:p-4">
+              <div className="relative w-full aspect-video overflow-hidden gsap-image-container bg-[#14171A]/10">
+                <Image
+                  src="/api/placeholder/1200/675" // Replace this with the actual hardware/RC car image path
+                  alt="Early Arduino RC Car Prototype"
+                  fill
+                  className="object-cover filter grayscale mix-blend-multiply opacity-80"
+                />
+              </div>
+              <div className="mt-4 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                  SYS_LOG // MY_FIRST_LAPTOP
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#14171A]/50">
+                  Photo Archive
+                </span>
+              </div>
+            </div>
+
+            <div className="text-2xl md:text-4xl font-display font-medium leading-tight text-[#14171A] gsap-reveal">
+              <p>
+                That same mindset bled into software and networking. I prefer
+                learning the fundamentals over relying on automated shortcuts.
+              </p>
+            </div>
+          </div>
+        </div>
+        <hr className="mt-32 border-t border-[#14171A]/20 gsap-line origin-left" />
+      </section>
+
+      {/* 03 — BEYOND THE KEYBOARD */}
+      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10">
+        <div className="mb-24 md:mb-40 max-w-4xl gsap-reveal">
+          <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-6">
+            03 — Beyond the keyboard
+          </span>
+          <h2 className="text-4xl md:text-7xl font-display font-bold leading-[1.1] tracking-tight">
+            When I'm not building something, I'm usually doing something
+            considerably less productive.
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-start">
+          <div className="md:col-span-5 space-y-32">
+            <button
+              type="button"
+              className="group block w-full text-left gsap-reveal focus:outline-none"
+              onClick={() => setSelectedPhoto(PHOTOS[0])}
+            >
+              <div
+                className={`relative w-full overflow-hidden ${PHOTOS[0].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+              >
+                <Image
+                  src={PHOTOS[0].src}
+                  alt={PHOTOS[0].alt}
+                  fill
+                  className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                />
+              </div>
+              <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                  {PHOTOS[0].captionTitle}
+                </span>
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#14171A]/40">
+                  [ Click to view ]
+                </span>
+              </div>
+            </button>
+
+            <div className="gsap-reveal border-l-2 border-[#14171A] pl-6 py-2">
+              <h3 className="text-3xl font-display font-bold mb-4 tracking-tight">
+                There's usually something playing.
+              </h3>
+              <p className="text-[#14171A]/70 mb-8 font-body text-lg">
+                Music makes coding sessions considerably better.
+              </p>
+
+              <button
+                type="button"
+                className="group block w-full text-left focus:outline-none"
+                onClick={() => setSelectedPhoto(PHOTOS[1])}
+              >
+                <div
+                  className={`relative w-full overflow-hidden ${PHOTOS[1].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+                >
+                  <Image
+                    src={PHOTOS[1].src}
+                    alt={PHOTOS[1].alt}
+                    fill
+                    className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                  />
+                </div>
+                <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
+                  <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                    {PHOTOS[1].captionTitle}
+                  </span>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <div className="md:col-span-6 md:col-start-7 space-y-32 md:mt-48">
+            <div className="gsap-reveal bg-[#14171A] text-[#EDEAE3] p-10 md:p-16">
+              <h3 className="font-display font-bold text-3xl md:text-5xl mb-6 tracking-tight leading-tight">
+                I also spend an unreasonable amount of time hitting things on
+                beat.
+              </h3>
+              <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                // Rhythm games are a serious commitment.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="group block w-full text-left gsap-reveal focus:outline-none"
+              onClick={() => setSelectedPhoto(PHOTOS[2])}
+            >
+              <div
+                className={`relative w-full overflow-hidden ${PHOTOS[2].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+              >
+                <Image
+                  src={PHOTOS[2].src}
+                  alt={PHOTOS[2].alt}
+                  fill
+                  className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                />
+              </div>
+              <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
+                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                  {PHOTOS[2].captionTitle}
+                </span>
+              </div>
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* 2. THE STORY & 3. PHILOSOPHY */}
-      <section
-        className="relative w-full px-6 py-32 sm:px-10"
-        style={{ backgroundColor: TOKENS.ink, color: TOKENS.paper }}
-      >
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-20 lg:grid-cols-2">
-          <div className="reveal-up">
-            <span
-              className="mb-6 block font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em]"
-              style={{ color: TOKENS.accent }}
-            >
-              The Background
-            </span>
-            <h2 className="mb-6 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight sm:text-4xl">
-              How everything started.
-            </h2>
-            <p
-              className="text-lg leading-relaxed"
-              style={{ color: TOKENS.mutedLight }}
-            >
-              Like a lot of people who get into programming, I started around
-              the age of 16 with a very specific goal: I wanted to build video
-              games.
+      {/* 04 — LITTLE THINGS */}
+      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10 border-t">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-16 gap-x-6">
+          <div className="gsap-reveal flex flex-col justify-between h-full">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+              Age
             </p>
-            <p
-              className="mt-6 text-lg leading-relaxed"
-              style={{ color: TOKENS.mutedLight }}
-            >
-              At first, it was just curiosity. I downloaded VS Code, started
-              experimenting, and promptly spent days trying to figure out bugs
-              that turned out to be a missing semicolon or a simple typo. Most
-              of what I built back then wasn't very good. But every mistake
-              taught me how things actually worked under the hood. Over time,
-              that curiosity shifted away from games and toward the web—and I
-              realized how much I cared about building things that felt solid,
-              useful, and reliable.
+            <p className="text-6xl md:text-8xl font-display font-bold tracking-tighter">
+              18
             </p>
           </div>
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+              Location
+            </p>
+            <p className="text-6xl md:text-8xl font-display font-bold tracking-tighter">
+              IDN
+            </p>
+          </div>
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+              Focus
+            </p>
+            <p className="text-4xl md:text-6xl font-display font-bold tracking-tighter">
+              WEB
+            </p>
+          </div>
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+              Drive
+            </p>
+            <p className="text-3xl md:text-5xl font-display font-bold tracking-tighter break-words">
+              CURIOSITY
+            </p>
+          </div>
+        </div>
+      </section>
 
-          <div
-            className="reveal-up lg:border-l lg:pl-20"
-            style={{ borderColor: TOKENS.hairlineDark }}
-          >
-            <span
-              className="mb-6 block font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em]"
-              style={{ color: TOKENS.accent }}
-            >
-              Core Beliefs
+      {/* 05 — CURRENTLY */}
+      <section className="py-32 px-6 md:px-12 bg-[#14171A] text-[#EDEAE3]">
+        <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
+          <div className="md:col-span-5 md:sticky md:top-32 self-start gsap-reveal">
+            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-6">
+              05 — Currently
             </span>
-            <h2 className="mb-8 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight sm:text-4xl">
-              What I've learned.
+            <h2 className="text-5xl md:text-7xl font-display font-bold leading-[1.1] tracking-tight">
+              Things I'm <br /> currently <br /> figuring out
             </h2>
-            <ul className="flex flex-col gap-6 text-lg">
-              <li className="flex items-start gap-4">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4622A]" />
-                <p>
-                  <strong>Simplicity usually beats complexity.</strong> I've
-                  found that removing features and reducing friction almost
-                  always solves more problems than adding new ones.
-                </p>
-              </li>
-              <li className="flex items-start gap-4">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4622A]" />
-                <p>
-                  <strong>Performance is part of the design.</strong> I used to
-                  think speed was something you worried about after a site was
-                  finished. The more projects I built, the more I realized it
-                  has to be built in from day one.
-                </p>
-              </li>
-              <li className="flex items-start gap-4">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4622A]" />
-                <p>
-                  <strong>Animation should guide, not distract.</strong> Over
-                  time, I learned that movement on a screen should only ever
-                  point a person toward what they actually need to see.
-                </p>
-              </li>
-              <li className="flex items-start gap-4">
-                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[#B4622A]" />
-                <p>
-                  <strong>Every section needs a reason to exist.</strong> If a
-                  part of a page doesn't serve a clear purpose for the visitor,
-                  it's better left out.
-                </p>
-              </li>
+          </div>
+          <div className="md:col-span-6 md:col-start-7 text-xl md:text-2xl text-[#EDEAE3]/80 space-y-12 font-body gsap-reveal">
+            <p className="leading-relaxed">
+              I'm always experimenting with something new. Right now, my focus
+              is split between building out web interfaces and digging into the
+              infrastructure that powers them.
+            </p>
+
+            <ul className="flex flex-col w-full border-t border-[#EDEAE3]/20 pt-8">
+              {[
+                "Frontend development (React, Next.js)",
+                "JavaScript & TypeScript",
+                "WebSockets and real-time data",
+                "Python network automation",
+                "MikroTik firewall logic and routing",
+                "Configuring BIND9 on Debian servers",
+              ].map((item, i) => (
+                <li
+                  key={i}
+                  className="flex justify-between items-center py-4 border-b border-[#EDEAE3]/10 hover:text-[#B4622A] transition-colors group cursor-default"
+                >
+                  <span className="font-mono text-sm text-[#EDEAE3]/40 group-hover:text-[#B4622A] transition-colors">
+                    0{i + 1}
+                  </span>
+                  <span className="font-display text-xl tracking-tight text-right">
+                    {item}
+                  </span>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
       </section>
 
-      {/* 4. HOW I WORK & 5. WHAT YOU CAN EXPECT */}
-      <section
-        className="relative w-full px-6 py-32 sm:px-10"
-        style={{ backgroundColor: TOKENS.paper, color: TOKENS.ink }}
-      >
-        <div className="mx-auto grid w-full max-w-6xl grid-cols-1 gap-20 lg:grid-cols-2">
-          <div>
-            <div className="reveal-up mb-12">
-              <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight">
-                How we'll work together.
-              </h2>
-            </div>
-
-            <div id="process-list" className="flex flex-col">
-              {[
-                {
-                  phase: "Discover",
-                  desc: "Before I write any code, we just talk. I want to understand your business, what's currently frustrating you, and what your customers actually need.",
-                },
-                {
-                  phase: "Architect",
-                  desc: "I map out the structure of your site, making sure everything is clear, easy to navigate, and makes sense for your goals.",
-                },
-                {
-                  phase: "Build",
-                  desc: "This is where I sit down and build it. I take my time here to make sure everything is reliable so you don't have to worry about it breaking later.",
-                },
-                {
-                  phase: "Launch",
-                  desc: "We test the site together, fix any small details we missed, and put it out into the world.",
-                },
-                {
-                  phase: "Support",
-                  desc: "I don't just disappear. I stick around to help you make small adjustments as your business grows.",
-                },
-              ].map((step, i) => (
-                <div
-                  key={i}
-                  className="process-step group flex gap-6 border-b py-6"
-                  style={{ borderColor: TOKENS.hairlineLight }}
-                >
-                  <span
-                    className="font-[family-name:var(--font-mono)] text-sm font-bold"
-                    style={{ color: TOKENS.accent }}
-                  >
-                    0{i + 1}
-                  </span>
-                  <div>
-                    <h3 className="mb-1 text-xl font-bold">{step.phase}</h3>
-                    <p style={{ color: TOKENS.mutedDark }}>{step.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="lg:pl-20">
-            <div className="reveal-up mb-12">
-              <h2 className="font-[family-name:var(--font-display)] text-4xl font-bold tracking-tight">
-                What you can expect.
-              </h2>
-            </div>
-
-            <div className="reveal-up grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2 lg:grid-cols-1">
-              {[
-                "I'll ask a lot of questions before we start.",
-                "I'll be honest if I think an idea won't actually help your business.",
-                "I'd much rather simplify a messy process than overcomplicate it.",
-                "I keep you in the loop—communication matters just as much as the code.",
-                "I avoid technical jargon and explain things in plain English.",
-                "I treat your deadline as a promise.",
-              ].map((item, i) => (
-                <div
-                  key={i}
-                  className="flex items-center gap-4 border-b pb-4"
-                  style={{ borderColor: TOKENS.hairlineLight }}
-                >
-                  <svg
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke={TOKENS.accent}
-                    strokeWidth="2.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="shrink-0"
-                  >
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span className="font-medium">{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. PERSONALITY & 7. WORKSPACE GRID */}
-      <section
-        className="relative w-full border-t px-6 py-32 sm:px-10"
-        style={{
-          backgroundColor: TOKENS.paper,
-          color: TOKENS.ink,
-          borderColor: TOKENS.hairlineLight,
-        }}
-      >
-        <div className="mx-auto w-full max-w-6xl">
-          <div className="reveal-up mb-16 max-w-3xl">
-            <h2 className="mb-6 font-[family-name:var(--font-display)] text-3xl font-bold tracking-tight sm:text-4xl">
-              Beyond the keyboard.
-            </h2>
-            <p
-              className="text-xl leading-relaxed"
-              style={{ color: TOKENS.mutedDark }}
-            >
-              When I'm away from my desk, I'm usually out with friends,
-              listening to music, or spending far too much time playing rhythm
-              games. Most of the time, I'm just doing what any other teenager
-              does laughing over dumb jokes, staying up later than I probably
-              should, and enjoying the little moments in between projects.
-            </p>
-            <p
-              className="mt-6 text-xl leading-relaxed"
-              style={{ color: TOKENS.mutedDark }}
-            >
-              Those breaks matter more than I used to think. Stepping away from
-              the screen gives me fresh ideas, and I often come back seeing a
-              problem from a completely different angle.
-            </p>
-            <p
-              className="mt-6 text-xl leading-relaxed"
-              style={{ color: TOKENS.mutedDark }}
-            >
-              Building websites is a big part of my life, but it isn't my entire
-              personality. I enjoy learning, making things, and gradually
-              getting better at what I do, while still making time for the
-              people and hobbies that keep life fun.
-            </p>
-          </div>
-
-          {/* Subheader hint for the grid */}
-          <div className="reveal-up mb-6 flex items-center justify-between">
-            <span
-              className="font-[family-name:var(--font-mono)] text-[10px] font-bold uppercase tracking-[0.2em]"
-              style={{ color: TOKENS.accent }}
-            >
-              Glimpses
-            </span>
-            <span
-              className="font-[family-name:var(--font-mono)] text-xs tracking-wide"
-              style={{ color: TOKENS.mutedDark }}
-            >
-              [ Click any image to expand ]
-            </span>
-          </div>
-
-          {/* REFACTORED IMAGE GRID */}
-          <div className="reveal-up grid grid-cols-1 gap-4 sm:grid-cols-3">
-            {workspaceImages.map((img, index) => (
-              <div
-                key={index}
-                onClick={() => setActiveImage(img)}
-                className={`relative aspect-square w-full overflow-hidden bg-[#D8D3C7] cursor-pointer group ${img.layoutClass}`}
-              >
-                <Image
-                  src={img.src}
-                  alt={img.alt}
-                  fill
-                  className="object-cover filter grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700"
-                />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-
-                {/* Subtle hover badge right on the image */}
-                <div className="absolute bottom-3 right-3 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 bg-[#14171A]/80 backdrop-blur-md px-3 py-1.5 rounded text-[10px] font-[family-name:var(--font-mono)] uppercase tracking-wider text-[#EDEAE3]">
-                  View full image
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 8. CTA */}
-      <section
-        className="relative flex flex-col items-center justify-center px-6 py-40 text-center sm:px-10"
-        style={{ backgroundColor: TOKENS.ink, color: TOKENS.paper }}
-      >
-        <div className="reveal-up w-full max-w-4xl">
-          <h2 className="mb-10 font-[family-name:var(--font-display)] text-4xl font-extrabold tracking-tight sm:text-6xl">
-            Let's build something useful together.
+      {/* 06 — THE ENDING */}
+      <section className="py-40 px-6 md:px-12 max-w-screen-2xl mx-auto relative border-x border-b border-[#14171A]/10">
+        <div className="flex flex-col items-center text-center gsap-reveal">
+          <h2 className="text-5xl md:text-8xl font-display font-bold mb-6 tracking-tighter">
+            Anyway, <br /> that's me.
           </h2>
-          <a
+          <p className="text-xl text-[#14171A]/70 mb-16 font-body">
+            Now you know who's behind the screen.
+          </p>
+          <Link
             href="/"
-            className="inline-flex items-center justify-center gap-3 bg-[#B4622A] px-8 py-4 text-sm font-bold uppercase tracking-widest text-[#EDEAE3] transition-transform hover:scale-105"
+            className="group flex items-center justify-center w-40 h-40 rounded-full border border-[#14171A] hover:bg-[#14171A] hover:text-[#EDEAE3] transition-colors duration-500"
           >
-            Start the conversation
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </a>
+            <span className="font-mono text-xs uppercase tracking-widest text-center px-4">
+              See what <br /> I build <br />
+              <span className="block mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                →
+              </span>
+            </span>
+          </Link>
         </div>
       </section>
 
-      {/* THE LIGHTBOX OVERLAY */}
-      {activeImage && (
-        <div
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#14171A]/95 p-6 backdrop-blur-sm transition-opacity"
-          onClick={() => setActiveImage(null)}
-        >
-          <button
-            onClick={() => setActiveImage(null)}
-            className="absolute right-6 top-6 p-2 text-[#EDEAE3] hover:text-[#B4622A] transition-colors z-50"
-            aria-label="Close modal"
-          >
-            <svg
-              width="32"
-              height="32"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-
-          <div
-            className="relative flex w-full max-w-5xl flex-1 flex-col items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="relative w-full max-w-4xl aspect-[4/3] sm:aspect-video">
-              <Image
-                src={activeImage.src}
-                alt={activeImage.alt}
-                fill
-                className="object-contain"
-              />
-            </div>
-            <p className="mt-6 text-center font-[family-name:var(--font-mono)] text-sm tracking-wide text-[#EDEAE3]">
-              {activeImage.caption}
-            </p>
-          </div>
-        </div>
-      )}
-    </div>
+      <Lightbox photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
+    </main>
   );
 }
