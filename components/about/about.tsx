@@ -442,31 +442,6 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
-
-      {/* 06 — THE ENDING */}
-      <section className="py-40 px-6 md:px-12 max-w-screen-2xl mx-auto relative border-x border-b border-[#14171A]/10">
-        <div className="flex flex-col items-center text-center gsap-reveal">
-          <h2 className="text-5xl md:text-8xl font-display font-bold mb-6 tracking-tighter">
-            Anyway, <br /> that's me.
-          </h2>
-          <p className="text-xl text-[#14171A]/70 mb-16 font-body">
-            Now you know who's behind the screen.
-          </p>
-          <Link
-            href="/"
-            className="group flex items-center justify-center w-40 h-40 rounded-full border border-[#14171A] hover:bg-[#14171A] hover:text-[#EDEAE3] transition-colors duration-500"
-          >
-            <span className="font-mono text-xs uppercase tracking-widest text-center px-4">
-              See what <br /> I build <br />
-              <span className="block mt-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                →
-              </span>
-            </span>
-          </Link>
-        </div>
-      </section>
-
-      <Lightbox photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
     </main>
   );
 }
