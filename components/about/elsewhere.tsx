@@ -7,7 +7,6 @@ import github from "../../public/images/about/github.png";
 import instagram from "../../public/images/about/instagram.png";
 import discord from "../../public/images/about/discord.png";
 import email from "../../public/images/about/email.png";
-import firstlaptop from "../../public/images/about/first_laptop.png";
 
 import { StaticImageData } from "next/image";
 // Data stored exclusively on the client side[cite: 1]
@@ -16,7 +15,7 @@ const SOCIAL_LINKS = [
     id: "01",
     platform: "GITHUB",
     description: "Where most of my questionable decisions are committed.",
-    href: "https://github.com",
+    href: "https://github.com/ZaniTheDev",
     image: github,
   },
   {
@@ -24,21 +23,15 @@ const SOCIAL_LINKS = [
     platform: "INSTAGRAM",
     description:
       "Mostly friends, random photos, and occasionally something worth posting.",
-    href: "https://instagram.com",
+    href: "https://www.instagram.com/voidsparkmedia/?hl=en",
     image: instagram,
   },
-  {
-    id: "03",
-    platform: "LINKEDIN",
-    description: "The professional version of me.",
-    href: "https://linkedin.com",
-    image: "/api/placeholder/600/400",
-  },
+
   {
     id: "04",
     platform: "DISCORD",
     description: "Probably doing something other than what I should be doing.",
-    href: "https://discord.com",
+    href: "https://discord.com/users/763333673554542612",
     image: discord,
   },
   {
