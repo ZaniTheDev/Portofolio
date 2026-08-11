@@ -8,7 +8,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import teamPhoto from "../../public/images/about/team.jpg";
 import teamPhoto2 from "../../public/images/about/team1.jpg";
 import spotify from "../../public/images/about/spotify.png";
-
+import firstlaptop from "../../public/images/about/first_laptop.jpeg";
 gsap.registerPlugin(ScrollTrigger);
 
 type Photo = {
@@ -227,7 +227,7 @@ export default function AboutPage() {
             <div className="my-16 gsap-reveal border border-[#14171A]/10 bg-[#14171A]/5 p-2 md:p-4">
               <div className="relative w-full aspect-video overflow-hidden gsap-image-container bg-[#14171A]/10">
                 <Image
-                  src="/api/placeholder/1200/675" // Replace this with the actual hardware/RC car image path
+                  src={firstlaptop}
                   alt="Early Arduino RC Car Prototype"
                   fill
                   className="object-cover filter grayscale mix-blend-multiply opacity-80"
@@ -442,6 +442,8 @@ export default function AboutPage() {
           </div>
         </div>
       </section>
+
+      <Lightbox photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
     </main>
   );
 }

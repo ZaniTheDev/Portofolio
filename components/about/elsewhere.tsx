@@ -3,7 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import gsap from "gsap";
+import github from "../../public/images/about/github.png";
+import instagram from "../../public/images/about/instagram.png";
+import discord from "../../public/images/about/discord.png";
+import email from "../../public/images/about/email.png";
+import firstlaptop from "../../public/images/about/first_laptop.png";
 
+import { StaticImageData } from "next/image";
 // Data stored exclusively on the client side[cite: 1]
 const SOCIAL_LINKS = [
   {
@@ -11,7 +17,7 @@ const SOCIAL_LINKS = [
     platform: "GITHUB",
     description: "Where most of my questionable decisions are committed.",
     href: "https://github.com",
-    image: "/api/placeholder/600/400", // Replace with your actual image path
+    image: github,
   },
   {
     id: "02",
@@ -19,7 +25,7 @@ const SOCIAL_LINKS = [
     description:
       "Mostly friends, random photos, and occasionally something worth posting.",
     href: "https://instagram.com",
-    image: "/api/placeholder/600/400",
+    image: instagram,
   },
   {
     id: "03",
@@ -33,16 +39,24 @@ const SOCIAL_LINKS = [
     platform: "DISCORD",
     description: "Probably doing something other than what I should be doing.",
     href: "https://discord.com",
-    image: "/api/placeholder/600/400",
+    image: discord,
   },
   {
     id: "05",
     platform: "EMAIL",
     description: "For things that actually matter.",
-    href: "mailto:hello@example.com",
-    image: "/api/placeholder/600/400",
+    href: "mailto:hamzahtizani@gmail.com",
+    image: email,
   },
 ];
+
+type LinkData = {
+  id: string;
+  platform: string;
+  description: string;
+  href: string;
+  image: StaticImageData | string;
+};
 
 export default function ElsewhereContent() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,7 +66,6 @@ export default function ElsewhereContent() {
 
   // Keep track of the active image
   const [activeImage, setActiveImage] = useState<string | null>(null);
-
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -116,8 +129,9 @@ export default function ElsewhereContent() {
     if (!row) return;
 
     // Set the image source
-    setActiveImage(linkData.image);
-
+    setActiveImage(
+      typeof linkData.image === "string" ? linkData.image : linkData.image.src,
+    );
     // Dim all other rows smoothly
     gsap.to(
       rowsRef.current.filter((_, i) => i !== index),
