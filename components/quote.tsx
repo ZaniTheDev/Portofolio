@@ -164,7 +164,7 @@ export default function FoundersManifesto() {
           <div className="flex flex-col justify-between lg:col-span-4 lg:pl-16 lg:pt-10">
             {/* Interactive High-End Founder Portrait Wrapper */}
             <Link
-              href="/about"
+              href="https://info.zanidev.site"
               className="sidebar-reveal group relative mb-12 block aspect-[4/5] w-full max-w-[280px] lg:mb-0"
             >
               {/* Image Container */}

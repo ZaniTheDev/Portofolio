@@ -41,6 +41,7 @@ export default function RootLayout({
     <html
       lang="en"
       className={`${display.variable} ${body.variable} ${mono.variable} h-full antialiased scroll-smooth`}
+      data-scroll-behavior="smooth"
     >
       <body
         className="min-h-full flex flex-col font-[family-name:var(--font-body)]"
