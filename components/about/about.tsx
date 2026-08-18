@@ -2,13 +2,15 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+
 import teamPhoto from "../../public/images/about/team.jpg";
 import teamPhoto2 from "../../public/images/about/team1.jpg";
 import spotify from "../../public/images/about/spotify.png";
-import firstlaptop from "../../public/images/about/first_laptop.jpeg";
+
+import HowItStarted from "./HowItStarted";
+
 gsap.registerPlugin(ScrollTrigger);
 
 type Photo = {
@@ -24,26 +26,57 @@ const PHOTOS: Photo[] = [
   {
     id: "friends",
     src: teamPhoto,
-    alt: "Hanging out with friends",
-    captionTitle: "Friends",
-    captionText: "Good people, good memories.",
+    alt: "Hanging out with friends after graduation",
+    captionTitle: "Post-Graduation",
+    captionText:
+      "Wrapping up high school and hanging out with everyone before starting work.",
     aspectRatio: "aspect-[3/4]",
   },
   {
     id: "spotify",
     src: spotify,
     alt: "Spotify playing music",
-    captionTitle: "Spotify",
-    captionText: "Usually have music playing somewhere in the background.",
+    captionTitle: "Soundtrack",
+    captionText:
+      "Music plays nonstop in the background so I don't go insane debugging.",
     aspectRatio: "aspect-[4/3]",
   },
   {
     id: "routine",
     src: teamPhoto2,
-    alt: "Daily routine",
-    captionTitle: "Having fun :)",
-    captionText: "Just hanging out at my house",
+    alt: "Hanging out at home",
+    captionTitle: "At the house",
+    captionText: "Messing around at home with friends on a random afternoon.",
     aspectRatio: "aspect-square",
+  },
+];
+
+const SKILL_DOMAINS = [
+  {
+    category: "Networking & Infra",
+    items: [
+      "MikroTik dynamic routing and custom firewall rules",
+      "Debian server setups running BIND9 for local DNS",
+      "VLAN segregation and network isolation logic",
+      "Tracking router health using Cacti SNMP monitoring",
+    ],
+  },
+  {
+    category: "Web & Real-Time",
+    items: [
+      "Full-stack React & Next.js web applications",
+      "Real-time features built with vanilla WebSockets",
+      "TypeScript logic and engine fundamentals",
+      "Custom layout architectures built from scratch",
+    ],
+  },
+  {
+    category: "Automation & Scripting",
+    items: [
+      "Python scripts for network automation tasks",
+      "Arduino hardware projects using C++ and sensors",
+      "Custom Bash scripts for everyday Linux terminal workflows",
+    ],
   },
 ];
 
@@ -66,7 +99,7 @@ function Lightbox({
 
   return (
     <div
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#14171A]/95 backdrop-blur-md p-4 md:p-12 transition-opacity"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-[#0F1115]/95 backdrop-blur-md p-4 md:p-12 transition-opacity"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -76,24 +109,24 @@ function Lightbox({
         onClick={(e) => e.stopPropagation()}
       >
         <button
-          className="absolute top-4 right-4 text-[#EDEAE3] font-mono text-sm uppercase tracking-widest hover:text-[#B4622A] transition-colors focus:outline-none px-4 py-2"
+          className="absolute top-4 right-4 text-[#EAE8E1] font-mono text-xs uppercase tracking-widest hover:text-[#D97706] transition-colors focus:outline-none px-4 py-2 border border-[#EAE8E1]/20"
           onClick={onClose}
-          aria-label="Close lightbox"
+          aria-label="Close photo"
         >
-          [ Close ]
+          [ Esc / Close ]
         </button>
-        <div className="relative w-full max-h-[75vh] flex justify-center border border-[#EDEAE3]/10 bg-[#14171A] p-2">
+        <div className="relative w-full max-h-[75vh] flex justify-center border border-[#EAE8E1]/10 bg-[#0F1115] p-2">
           <Image
             src={photo.src}
             alt={photo.alt}
             className="object-contain max-h-[73vh] w-auto"
           />
         </div>
-        <div className="mt-6 flex flex-col items-center text-center text-[#EDEAE3]">
-          <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-1">
+        <div className="mt-6 flex flex-col items-center text-center text-[#EAE8E1]">
+          <p className="font-mono text-xs uppercase tracking-widest text-[#D97706] mb-1">
             {photo.captionTitle}
           </p>
-          <p className="text-sm font-body text-[#EDEAE3]/80">
+          <p className="text-sm font-body text-[#EAE8E1]/80">
             {photo.captionText}
           </p>
         </div>
@@ -102,25 +135,25 @@ function Lightbox({
   );
 }
 
-export default function AboutPage() {
+export default function About() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
+  const [activeDomain, setActiveDomain] = useState(0);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>(".gsap-reveal").forEach((el) => {
         gsap.fromTo(
           el,
-          { autoAlpha: 0, y: 30, clipPath: "inset(100% 0 0 0)" },
+          { autoAlpha: 0, y: 24 },
           {
             autoAlpha: 1,
             y: 0,
-            clipPath: "inset(0% 0 0 0)",
-            duration: 1,
-            ease: "power3.out",
+            duration: 0.8,
+            ease: "power2.out",
             scrollTrigger: {
               trigger: el,
-              start: "top 85%",
+              start: "top 88%",
             },
           },
         );
@@ -132,192 +165,119 @@ export default function AboutPage() {
           { scaleX: 0 },
           {
             scaleX: 1,
-            duration: 1.5,
+            duration: 1.2,
             ease: "expo.out",
             transformOrigin: "left center",
             scrollTrigger: {
               trigger: line,
-              start: "top 90%",
+              start: "top 92%",
             },
           },
         );
       });
-
-      gsap.utils
-        .toArray<HTMLElement>(".gsap-image-container")
-        .forEach((container) => {
-          const img = container.querySelector("img");
-          if (img) {
-            gsap.fromTo(
-              img,
-              { yPercent: -10, scale: 1.1 },
-              {
-                yPercent: 10,
-                scale: 1,
-                ease: "none",
-                scrollTrigger: {
-                  trigger: container,
-                  start: "top bottom",
-                  end: "bottom top",
-                  scrub: true,
-                },
-              },
-            );
-          }
-        });
     }, containerRef);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <main
+    <div
       ref={containerRef}
-      className="min-h-screen font-body overflow-hidden bg-[#EDEAE3] text-[#14171A] selection:bg-[#B4622A] selection:text-[#EDEAE3]"
+      className="min-h-screen font-body bg-[#EAE8E1] text-[#0F1115] selection:bg-[#D97706] selection:text-[#EAE8E1]"
     >
-      {/* 01 — WHO */}
-      <section className="relative pt-32 pb-24 md:pt-48 md:pb-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-end relative z-10">
+      {/* INTRO SECTION */}
+      <section className="relative pt-32 pb-20 md:pt-40 md:pb-28 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#0F1115]/10">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-end relative z-10">
           <div className="md:col-span-8 gsap-reveal">
-            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-8">
-              01 — Who
+            <span className="block font-mono text-xs uppercase tracking-widest text-[#D97706] mb-6">
+              A bit about me
             </span>
-            <h1 className="text-6xl md:text-8xl lg:text-[9rem] font-display font-bold leading-[0.9] tracking-tighter">
+            <h1 className="text-6xl md:text-8xl lg:text-[8.5rem] font-display font-bold leading-[0.92] tracking-tighter">
               So, who <br /> is Zani?
             </h1>
           </div>
-          <div className="md:col-span-4 pb-2 md:pb-4 gsap-reveal">
-            <p className="text-lg md:text-xl leading-relaxed text-[#14171A]/80 font-body border-l border-[#B4622A] pl-6">
-              I'm 18, from Indonesia, and I spend a probably unreasonable amount
-              of time building things on a laptop that doesn't even have an
-              extra M.2 slot.
+          <div className="md:col-span-4 pb-2 gsap-reveal">
+            <p className="text-base md:text-lg leading-relaxed text-[#0F1115]/80 font-body border-l-2 border-[#D97706] pl-6">
+              I'm 18, living in Indonesia. Most of my day goes into building web
+              apps and messing around with home network labs. I prefer taking
+              the time to figure out how things actually work under the hood
+              instead of just relying on AI to churn out code.
             </p>
           </div>
         </div>
-        <hr className="mt-32 border-t border-[#14171A]/20 gsap-line origin-left" />
+        <hr className="mt-24 border-t border-[#0F1115]/15 gsap-line" />
       </section>
 
-      {/* 02 — HOW IT STARTED (Now with Hardware Prototype Image) */}
-      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10 relative">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-12">
-          <div className="md:col-span-4 md:sticky md:top-32 self-start gsap-reveal">
-            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
-              02 — How it started
-            </span>
-            <div className="w-12 h-[1px] bg-[#14171A]"></div>
-          </div>
+      {/* HOW IT STARTED (Extracted) */}
+      <HowItStarted />
 
-          <div className="md:col-span-7 md:col-start-6">
-            <div className="space-y-12 text-2xl md:text-4xl font-display font-medium leading-tight text-[#14171A] gsap-reveal">
-              <p>
-                I started coding because I wanted to make a video game. Way back
-                in 2015, I found Unity and thought it would be cool to make
-                something of my own. I had no idea what I was doing, I just
-                wanted to understand how games actually worked.
-              </p>
-              <p className="text-[#14171A]/50">
-                I never really lost that curiosity. What started with trying to
-                make a game eventually turned into building websites, learning
-                how software works, and spending an unreasonable amount of time
-                figuring out why something I wrote wasn't working.
-              </p>
-            </div>
-
-            {/* Archival Hardware Image Insert */}
-            <div className="my-16 gsap-reveal border border-[#14171A]/10 bg-[#14171A]/5 p-2 md:p-4">
-              <div className="relative w-full aspect-video overflow-hidden gsap-image-container bg-[#14171A]/10">
-                <Image
-                  src={firstlaptop}
-                  alt="Early Arduino RC Car Prototype"
-                  fill
-                  className="object-cover filter grayscale mix-blend-multiply opacity-80"
-                />
-              </div>
-              <div className="mt-4 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
-                  SYS_LOG // MY_FIRST_LAPTOP
-                </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#14171A]/50">
-                  Photo Archive
-                </span>
-              </div>
-            </div>
-
-            <div className="text-2xl md:text-4xl font-display font-medium leading-tight text-[#14171A] gsap-reveal">
-              <p>
-                That same mindset bled into software and networking. I prefer
-                learning the fundamentals over relying on automated shortcuts.
-              </p>
-            </div>
-          </div>
-        </div>
-        <hr className="mt-32 border-t border-[#14171A]/20 gsap-line origin-left" />
-      </section>
-
-      {/* 03 — BEYOND THE KEYBOARD */}
-      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10">
-        <div className="mb-24 md:mb-40 max-w-4xl gsap-reveal">
-          <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-6">
-            03 — Beyond the keyboard
+      {/* LIFE OUTSIDE CODING */}
+      <section className="py-28 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#0F1115]/10">
+        <div className="mb-20 max-w-3xl gsap-reveal">
+          <span className="block font-mono text-xs uppercase tracking-widest text-[#D97706] mb-4">
+            Outside of coding
           </span>
-          <h2 className="text-4xl md:text-7xl font-display font-bold leading-[1.1] tracking-tight">
-            When I'm not building something, I'm usually doing something
-            considerably less productive.
+          <h2 className="text-3xl md:text-6xl font-display font-bold leading-[1.1] tracking-tight">
+            When I'm not configuring routers or stuck debugging TypeScript, I'm
+            usually hanging out, listening to music, or playing rhythm games.
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-12 items-start">
-          <div className="md:col-span-5 space-y-32">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 items-start">
+          <div className="md:col-span-5 space-y-20">
             <button
               type="button"
-              className="group block w-full text-left gsap-reveal focus:outline-none"
+              className="group block w-full text-left gsap-reveal focus:outline-none focus:ring-2 focus:ring-[#D97706]"
               onClick={() => setSelectedPhoto(PHOTOS[0])}
             >
               <div
-                className={`relative w-full overflow-hidden ${PHOTOS[0].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+                className={`relative w-full overflow-hidden ${PHOTOS[0].aspectRatio} bg-[#0F1115]/5 border border-[#0F1115]/15 p-2`}
               >
                 <Image
                   src={PHOTOS[0].src}
                   alt={PHOTOS[0].alt}
                   fill
-                  className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                  sizes="(max-width: 768px) 100vw, 41.67vw"
+                  className="object-cover filter grayscale contrast-125 transition-all duration-500 group-hover:grayscale-0"
                 />
               </div>
-              <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+              <div className="mt-4 flex justify-between items-center border-t border-[#0F1115]/10 pt-3">
+                <span className="font-mono text-xs uppercase tracking-wider text-[#D97706]">
                   {PHOTOS[0].captionTitle}
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-[#14171A]/40">
-                  [ Click to view ]
+                <span className="font-mono text-[10px] uppercase tracking-widest text-[#0F1115]/50">
+                  [ View Photo ]
                 </span>
               </div>
             </button>
 
-            <div className="gsap-reveal border-l-2 border-[#14171A] pl-6 py-2">
-              <h3 className="text-3xl font-display font-bold mb-4 tracking-tight">
-                There's usually something playing.
+            <div className="gsap-reveal border-l-2 border-[#0F1115] pl-6 py-1">
+              <h3 className="text-2xl font-display font-bold mb-2 tracking-tight">
+                Always something playing
               </h3>
-              <p className="text-[#14171A]/70 mb-8 font-body text-lg">
-                Music makes coding sessions considerably better.
+              <p className="text-[#0F1115]/75 font-body text-base mb-6">
+                I can't focus in complete silence, so music is pretty much
+                mandatory whenever I'm working on a project.
               </p>
 
               <button
                 type="button"
-                className="group block w-full text-left focus:outline-none"
+                className="group block w-full text-left focus:outline-none focus:ring-2 focus:ring-[#D97706]"
                 onClick={() => setSelectedPhoto(PHOTOS[1])}
               >
                 <div
-                  className={`relative w-full overflow-hidden ${PHOTOS[1].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+                  className={`relative w-full overflow-hidden ${PHOTOS[1].aspectRatio} bg-[#0F1115]/5 border border-[#0F1115]/15 p-2`}
                 >
                   <Image
                     src={PHOTOS[1].src}
                     alt={PHOTOS[1].alt}
                     fill
-                    className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                    sizes="(max-width: 768px) 100vw, 41.67vw"
+                    className="object-cover filter grayscale contrast-125 transition-all duration-500 group-hover:grayscale-0"
                   />
                 </div>
-                <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
-                  <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+                <div className="mt-4 flex justify-between items-center border-t border-[#0F1115]/10 pt-3">
+                  <span className="font-mono text-xs uppercase tracking-wider text-[#D97706]">
                     {PHOTOS[1].captionTitle}
                   </span>
                 </div>
@@ -325,34 +285,35 @@ export default function AboutPage() {
             </div>
           </div>
 
-          <div className="md:col-span-6 md:col-start-7 space-y-32 md:mt-48">
-            <div className="gsap-reveal bg-[#14171A] text-[#EDEAE3] p-10 md:p-16">
-              <h3 className="font-display font-bold text-3xl md:text-5xl mb-6 tracking-tight leading-tight">
-                I also spend an unreasonable amount of time hitting things on
-                beat.
+          <div className="md:col-span-6 md:col-start-7 space-y-20 md:mt-24">
+            <div className="gsap-reveal bg-[#0F1115] text-[#EAE8E1] p-8 md:p-12 border border-[#0F1115]">
+              <h3 className="font-display font-bold text-2xl md:text-4xl mb-4 tracking-tight leading-snug">
+                Hitting notes on beat
               </h3>
-              <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
-                // Rhythm games are a serious commitment.
+              <p className="font-mono text-xs uppercase tracking-widest text-[#D97706]">
+                // Rhythm games take up a lot of my free time. It's my favorite
+                way to clear my head after sitting in a terminal for hours.
               </p>
             </div>
 
             <button
               type="button"
-              className="group block w-full text-left gsap-reveal focus:outline-none"
+              className="group block w-full text-left gsap-reveal focus:outline-none focus:ring-2 focus:ring-[#D97706]"
               onClick={() => setSelectedPhoto(PHOTOS[2])}
             >
               <div
-                className={`relative w-full overflow-hidden ${PHOTOS[2].aspectRatio} bg-[#14171A]/5 gsap-image-container cursor-zoom-in border border-[#14171A]/10 p-2`}
+                className={`relative w-full overflow-hidden ${PHOTOS[2].aspectRatio} bg-[#0F1115]/5 border border-[#0F1115]/15 p-2`}
               >
                 <Image
                   src={PHOTOS[2].src}
                   alt={PHOTOS[2].alt}
                   fill
-                  className="object-cover transition-all duration-700 filter grayscale group-hover:grayscale-0"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover filter grayscale contrast-125 transition-all duration-500 group-hover:grayscale-0"
                 />
               </div>
-              <div className="mt-6 flex justify-between items-center border-t border-[#14171A]/10 pt-4">
-                <span className="font-mono text-xs uppercase tracking-widest text-[#B4622A]">
+              <div className="mt-4 flex justify-between items-center border-t border-[#0F1115]/10 pt-3">
+                <span className="font-mono text-xs uppercase tracking-wider text-[#D97706]">
                   {PHOTOS[2].captionTitle}
                 </span>
               </div>
@@ -361,89 +322,106 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 04 — LITTLE THINGS */}
-      <section className="py-32 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#14171A]/10 border-t">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-16 gap-x-6">
+      {/* QUICK FACTS */}
+      <section className="py-24 px-6 md:px-12 max-w-screen-2xl mx-auto border-x border-[#0F1115]/10 border-t border-[#0F1115]/15">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-y-12 gap-x-6">
           <div className="gsap-reveal flex flex-col justify-between h-full">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#D97706] mb-3">
               Age
             </p>
-            <p className="text-6xl md:text-8xl font-display font-bold tracking-tighter">
+            <p className="text-5xl md:text-7xl font-display font-bold tracking-tighter">
               18
             </p>
           </div>
-          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#0F1115]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#D97706] mb-3">
               Location
             </p>
-            <p className="text-6xl md:text-8xl font-display font-bold tracking-tighter">
+            <p className="text-5xl md:text-7xl font-display font-bold tracking-tighter">
               IDN
             </p>
           </div>
-          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
-              Focus
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#0F1115]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#D97706] mb-3">
+              Primary Focus
             </p>
-            <p className="text-4xl md:text-6xl font-display font-bold tracking-tighter">
-              WEB
+            <p className="text-3xl md:text-5xl font-display font-bold tracking-tighter">
+              Full Stack
             </p>
           </div>
-          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#14171A]/10 pl-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-4">
-              Drive
+          <div className="gsap-reveal flex flex-col justify-between h-full border-l border-[#0F1115]/10 pl-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-[#D97706] mb-3">
+              Secondary Focus
             </p>
-            <p className="text-3xl md:text-5xl font-display font-bold tracking-tighter break-words">
-              CURIOSITY
+            <p className="text-3xl md:text-5xl font-display font-bold tracking-tighter">
+              Networking
             </p>
           </div>
         </div>
       </section>
 
-      {/* 05 — CURRENTLY */}
-      <section className="py-32 px-6 md:px-12 bg-[#14171A] text-[#EDEAE3]">
+      {/* WHAT I'M WORKING WITH */}
+      <section className="py-28 px-6 md:px-12 bg-[#0F1115] text-[#EAE8E1]">
         <div className="max-w-screen-2xl mx-auto grid grid-cols-1 md:grid-cols-12 gap-12">
-          <div className="md:col-span-5 md:sticky md:top-32 self-start gsap-reveal">
-            <span className="block font-mono text-xs uppercase tracking-widest text-[#B4622A] mb-6">
-              05 — Currently
+          <div className="md:col-span-5 gsap-reveal">
+            <span className="block font-mono text-xs uppercase tracking-widest text-[#D97706] mb-4">
+              What I use
             </span>
-            <h2 className="text-5xl md:text-7xl font-display font-bold leading-[1.1] tracking-tight">
-              Things I'm <br /> currently <br /> figuring out
+            <h2 className="text-4xl md:text-6xl font-display font-bold leading-[1.05] tracking-tight mb-6">
+              Tools & stuff I build with
             </h2>
-          </div>
-          <div className="md:col-span-6 md:col-start-7 text-xl md:text-2xl text-[#EDEAE3]/80 space-y-12 font-body gsap-reveal">
-            <p className="leading-relaxed">
-              I'm always experimenting with something new. Right now, my focus
-              is split between building out web interfaces and digging into the
-              infrastructure that powers them.
+            <p className="text-[#EAE8E1]/70 font-body text-base leading-relaxed">
+              Right now I split my time between building frontend interfaces,
+              messing around with real-time WebSocket apps, and configuring
+              Linux servers and MikroTik routers.
             </p>
+          </div>
 
-            <ul className="flex flex-col w-full border-t border-[#EDEAE3]/20 pt-8">
-              {[
-                "Frontend development (React, Next.js)",
-                "JavaScript & TypeScript",
-                "WebSockets and real-time data",
-                "Python network automation",
-                "MikroTik firewall logic and routing",
-                "Configuring BIND9 on Debian servers",
-              ].map((item, i) => (
-                <li
-                  key={i}
-                  className="flex justify-between items-center py-4 border-b border-[#EDEAE3]/10 hover:text-[#B4622A] transition-colors group cursor-default"
-                >
-                  <span className="font-mono text-sm text-[#EDEAE3]/40 group-hover:text-[#B4622A] transition-colors">
-                    0{i + 1}
-                  </span>
-                  <span className="font-display text-xl tracking-tight text-right">
-                    {item}
-                  </span>
-                </li>
-              ))}
-            </ul>
+          {/* Interactive Tech Panel */}
+          <div className="md:col-span-7 md:col-start-6 gsap-reveal">
+            <div className="border border-[#EAE8E1]/20 bg-[#0F1115]">
+              {/* Domain Tabs */}
+              <div className="flex border-b border-[#EAE8E1]/20">
+                {SKILL_DOMAINS.map((domain, index) => (
+                  <button
+                    key={domain.category}
+                    onClick={() => setActiveDomain(index)}
+                    className={`flex-1 py-4 px-4 font-mono text-xs uppercase tracking-wider text-left transition-colors border-r last:border-r-0 border-[#EAE8E1]/20 ${
+                      activeDomain === index
+                        ? "bg-[#D97706] text-[#0F1115] font-bold"
+                        : "text-[#EAE8E1]/60 hover:text-[#EAE8E1] hover:bg-[#EAE8E1]/5"
+                    }`}
+                  >
+                    {domain.category}
+                  </button>
+                ))}
+              </div>
+
+              {/* Items Panel */}
+              <div className="p-6 md:p-8">
+                <p className="font-mono text-[11px] uppercase tracking-widest text-[#D97706] mb-6">
+                  {SKILL_DOMAINS[activeDomain].category.toUpperCase()}
+                </p>
+                <ul className="space-y-4">
+                  {SKILL_DOMAINS[activeDomain].items.map((item, i) => (
+                    <li
+                      key={i}
+                      className="flex items-start gap-4 text-base font-body text-[#EAE8E1]/90"
+                    >
+                      <span className="font-mono text-xs text-[#D97706] pt-1">
+                        &gt;
+                      </span>
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
       <Lightbox photo={selectedPhoto} onClose={() => setSelectedPhoto(null)} />
-    </main>
+    </div>
   );
 }
