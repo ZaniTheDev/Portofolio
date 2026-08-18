@@ -368,7 +368,7 @@ export default function ElsewhereContent() {
           </p>
 
           <Link
-            href="/"
+            href="https://zanidev.site"
             className="group flex items-center gap-4 text-xs font-[var(--font-mono)] tracking-widest uppercase hover:text-[#D94833] transition-colors focus-visible:outline-none"
           >
             <span className="border-b border-[#1C1B1A]/20 group-hover:border-[#D94833] pb-1 transition-colors">
