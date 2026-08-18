@@ -173,6 +173,7 @@ export default function FoundersManifesto() {
                   src={pfp}
                   alt="Zani - System Architect"
                   fill
+                  sizes="280px"
                   className="portrait-image object-cover filter grayscale transition-all duration-700 ease-out group-hover:grayscale-0"
                 />
                 <div className="absolute inset-0 bg-[#14171A]/10 mix-blend-multiply transition-opacity duration-700 group-hover:opacity-0" />
